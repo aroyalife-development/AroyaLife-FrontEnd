@@ -1,0 +1,196 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+.openTok-header {
+    background-color: #222;
+    height: 40px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.openTok-header h1 {
+    font-size: 16px;
+    font-weight: 200;
+}
+
+.openTok-logo {
+    height: 60%;
+    width: auto;
+}
+
+.openTok-main {
+    position: relative;
+    /* width: 75vw; */
+    /* height: calc(75vw * .6); */
+    height: 500px;
+    margin: 20px auto;
+    border: 1px solid lightblue;
+}
+
+.openTok-control-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.openTok-control-container.hidden {
+    display: none;
+}
+
+.openTok-control-container .ots-video-control {
+    width: 50px;
+    height: 50px;
+    margin: 20px 0 !important;
+    border: 2px solid white;
+    border-radius: 50%;
+    background-position: center;
+    background-color: rgba(27, 134, 144, 0.4);
+    background-color: lightgrey;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.openTok-control-container .ots-video-control.audio {
+    background-image: url(https://assets.tokbox.com/solutions/images/icon-mic.png);
+}
+
+.openTok-control-container .ots-video-control.audio:hover,
+.openTok-control-container .ots-video-control.audio.muted {
+    background-image: url(https://assets.tokbox.com/solutions/images/icon-muted-mic.png);
+}
+
+.openTok-control-container .ots-video-control.video {
+    background-image: url(https://assets.tokbox.com/solutions/images/icon-video.png);
+}
+
+.openTok-control-container .ots-video-control.video.muted {
+    background-image: url(https://assets.tokbox.com/solutions/images/icon-no-video.png);
+}
+
+.openTok-control-container .ots-video-control.end-call {
+    background-image: url(https://assets.tokbox.com/solutions/images/icon-hang-up.png);
+    background-color: red;
+}
+
+
+.openTok-video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.openTok-mask {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    color: white;
+    background: rgba(27, 134, 144, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.openTok-mask .react-spinner {
+    position: absolute;
+}
+
+.openTok-mask .message {
+    font-weight: 200;
+}
+
+.openTok-mask .message.with-spinner {
+    position: absolute;
+    top: 55%;
+}
+
+.openTok-mask .message.button {
+    border: 1px solid white;
+    padding: 20px 40px;
+    border-radius: 6px;
+    background-color: Transparent;
+    color: white;
+    font-family: sans-serif;
+    font-size: medium;
+}
+
+.openTok-mask .message.button:focus:active,  .message.button:focus, .message.button:active {
+  background-image: none;
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.openTok-video-container .video-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.openTok-video-container .video-container.small {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 160px;
+    height: 96px;
+    border: 1px solid #fcba00;
+    z-index: 2;
+}
+
+.openTok-video-container .video-container.small.left {
+    left: 20px;
+    border: 1px solid #00fcc2;
+}
+
+.openTok-video-container .video-container.hidden {
+    display: none;
+}
+
+.openTok-video-container .video-container.active-gt2 {
+   display: flex;
+   flex-direction: column;
+   flex-wrap: wrap;
+   height: 100%;
+   width: 100%;
+}
+
+.openTok-video-container .video-container.active-gt2.hidden {
+   display: none;
+}
+
+.openTok-video-container .video-container.active-gt2 .OT_subscriber {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  font-size: 0;
+  flex-basis: 50%;
+  box-sizing: border-box;
+  width: auto!important;
+  height: auto!important;
+}
+
+.openTok-video-container .video-container.active-gt2.active-odd .OT_subscriber:first-child {
+    flex-basis: 100%;
+}
+
+.circle-prescription, .circle-transfer{
+    text-align: center;
+    font-size: 30px;
+    color: white;
+}
