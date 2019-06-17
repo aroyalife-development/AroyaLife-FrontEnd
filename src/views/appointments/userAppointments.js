@@ -5,7 +5,7 @@ import {
     Card,
     CardBody,
     CardTitle,
-    Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input
+    Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input, NavLink
 } from 'reactstrap';
 import "react-table/react-table.css";
 
@@ -19,15 +19,17 @@ class UserAppointments extends React.Component {
             <Card>
                 <CardTitle className="mb-0 p-3 border-bottom bg-light">
                     <i className="mdi mdi-border-right mr-2"></i>Appointments
-                    <Button
-                        color="success"
-                        // onClick={this.toggle}
-                        style={{ 'marginBottom': '1rem' }}
-                        className="btn float-right"
-                    >
-                        <i className="mdi mdi-phone" />
-                        <span className="ml-2">Make a Call</span>
-                    </Button>
+                    <NavLink href="/videoCall">
+                        <Button
+                            color="success"
+                            // onClick={this.toggle}
+                            style={{ 'marginBottom': '1rem' }}
+                            className="btn float-right"
+                        >
+                            <i className="mdi mdi-phone" />
+                            <span className="ml-2">Make a Call</span>
+                        </Button>
+                    </NavLink>
                 </CardTitle>
                 <CardBody>
                     <ReactTable

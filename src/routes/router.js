@@ -619,6 +619,7 @@ var ThemeRoutes = [
 	},
 	{
 		path: '/videoCall',
+		hide: true,
 		name: 'Video Call',
 		icon: 'mdi mdi-phone',
 		component: videoCall
