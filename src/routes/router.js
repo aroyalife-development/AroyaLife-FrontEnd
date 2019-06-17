@@ -104,6 +104,10 @@ import userProfile from '../views/profiles/userProfile';
 /*                               Video call                                       */
 /*--------------------------------------------------------------------------------*/
 import videoCall from '../views/video-call/videoCall';
+/*--------------------------------------------------------------------------------*/
+/*                               Appointment                                      */
+/*--------------------------------------------------------------------------------*/
+import appointments from '../views/appointments/userAppointments';
 
 var auths = [].concat(AuthRoutes);
 
@@ -603,7 +607,7 @@ var ThemeRoutes = [
 		path: '/dashboards/dashboard1',
 		name: 'Dashboard',
 		mini: 'B',
-		icon: 'mdi mdi-adjust',
+		icon: 'mdi mdi-view-grid',
 		component: FirstDashboard
 	},
 	{
@@ -618,6 +622,12 @@ var ThemeRoutes = [
 		name: 'Video Call',
 		icon: 'mdi mdi-phone',
 		component: videoCall
+	},
+	{
+		path: '/appointments',
+		name: 'Appointments',
+		icon: 'mdi mdi-calendar-clock',
+		component: appointments
 	}
 ];
 export default ThemeRoutes;
