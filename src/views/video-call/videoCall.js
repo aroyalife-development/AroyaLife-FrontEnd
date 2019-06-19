@@ -84,7 +84,6 @@ class videoCall extends React.Component {
                                         </CardBody>
                                     </Card>
                                 </Collapse> */}
-
                 {/* <Button
                   color="success"
                   onClick={this.toggle}
