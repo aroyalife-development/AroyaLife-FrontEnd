@@ -103,12 +103,14 @@ class videoCall extends React.Component {
               <div className="d-flex align-items-center p-3 border-bottom">
                 <div className="mr-3">
                   <img src="" alt="user" className="rounded-circle" width="50" />
+
                 </div>
                 <div>
                   <h5 className="message-title mb-0">James Johnson</h5>
                   <span className="online"></span>
-                  <p className="mb-0">online</p>
 
+                  <p className="mb-0">online</p>
+                  <div class="notify"><span class="heartbit"></span> <span class="point"></span></div>
                 </div>
               </div>
             </div>
