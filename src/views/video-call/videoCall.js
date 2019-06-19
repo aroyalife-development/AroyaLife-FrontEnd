@@ -53,7 +53,7 @@ class videoCall extends React.Component {
                     </div>
                 </div> */}
         <Row>
-          <Col xs="12" md="8" sm="4">
+          <Col xs="12" md="8">
             <div>
               <OpenTok
                 prescriptionHandler={this.toggle}
@@ -99,7 +99,7 @@ class videoCall extends React.Component {
 
             {/* <div className="bg-white chat-list"></div> */}
           </Col>
-          <Col xs="12" md="4" sm="2">
+          <Col xs="12" md="4">
 
             <div id="chat" className="openTok-chat-container" />
             {/* <div className="bg-white chat-list">
