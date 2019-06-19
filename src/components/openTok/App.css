@@ -188,6 +188,24 @@ body {
     color: white;
 }
 
+.ots-icon-check {
+    /* background-image: url("https://assets.tokbox.com/solutions/images/text-chat-check.png"); */
+    background-image: url("../../assets/images/icon/paper-plane.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.ots-text-chat .ots-send-message-box input[type="text"], .ots-text-chat .ots-send-message-box textarea{
+    padding: 11px 24px 10px;
+}
+
+.ots-text-chat .ots-send-message-box {
+    height: 45px;
+}
+.ots-text-chat .ots-send-message-box button{
+    height: 44px;
+}
+
 
 /* 
   ##Device = Desktops
@@ -296,14 +314,13 @@ body {
     ##Screen = B/w 481px to 767px
   */
   
-  @media (min-width: 481px) and (max-width: 767px) and (orientation: landscape){
+  @media (min-width: 481px) and (max-width: 767px) {
     
     .openTok-main {
         position: relative;
         /* width: 75vw; */
         /* height: calc(75vw * .6); */
         height: 300px;
-        max-width: 700px;
         margin: 20px auto;
         border: 1px solid lightblue;
     }
