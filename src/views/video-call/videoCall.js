@@ -54,7 +54,7 @@ class videoCall extends React.Component {
                 </div> */}
         <Row>
           <Col xs="12" md="8">
-            <div style={{}}>
+            <div>
               <OpenTok
                 prescriptionHandler={this.toggle}
                 transferHandler={this.transfer}
@@ -92,33 +92,41 @@ class videoCall extends React.Component {
                 >
                   <i className="mdi mdi-medical-bag" />
                 </Button> */}
-                <Collapse isOpen={this.state.collapse} className="mt-5 pt-5">
-                  <Card className="border">
-                    <CardBody>
-                      <Form className="form-material">
-                        <FormGroup>
-                          <Label>Add Prescription Here</Label>
-                          <Input type="textarea" rows="4" />
-                          <br />
-                          <Button className="btn" color="success">
-                            Submit
-                          </Button>
-                        </FormGroup>
-                      </Form>
-                    </CardBody>
-                  </Card>
-                </Collapse>
+
               </div>
             </div>
 
             {/* <div className="bg-white chat-list"></div> */}
           </Col>
           <Col xs="12" md="4">
+
             <div id="chat" className="openTok-chat-container" />
             {/* <div className="bg-white chat-list">
               <ChatContent />
               <ChatMsgSend />
             </div> */}
+
+
+            <div className="prescription-container">
+              <Collapse isOpen={this.state.collapse}>
+                <Card className="border">
+                  <CardBody>
+                    <Form className="form-material">
+                      <FormGroup>
+                        <Label>Add Prescription Here</Label>
+                        <Input type="textarea" rows="4" />
+                        <br />
+                        <Button className="btn" color="success">
+                          Submit
+                        </Button>
+                      </FormGroup>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Collapse>
+            </div>
+
+
           </Col>
         </Row>
       </Fragment>
