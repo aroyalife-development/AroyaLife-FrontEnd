@@ -12,7 +12,7 @@ import {
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 import profilephoto from '../../../assets/images/users/1.jpg';
-import bgimage from '../../../assets/images/background/user-info.jpg';
+import bgimage from '../../../assets/images/background/Aroya-System-Photo.jpg';
 
 const sidebarBackground = {
 	backgroundImage: 'url(' + bgimage + ')',
