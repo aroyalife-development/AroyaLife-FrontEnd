@@ -1,4 +1,5 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment, PropTypes } from "react";
+import { Prompt } from "react-router";
 import ChatList from "../../containers/chat/chatList";
 import ChatSearch from "../../containers/chat/chatSearch";
 import ChatContent from "../../containers/chat/chatContent";
@@ -92,7 +93,6 @@ class videoCall extends React.Component {
                 >
                   <i className="mdi mdi-medical-bag" />
                 </Button> */}
-
               </div>
             </div>
 
@@ -102,15 +102,21 @@ class videoCall extends React.Component {
             <div>
               <div className="d-flex align-items-center p-3 border-bottom">
                 <div className="mr-3">
-                  <img src="" alt="user" className="rounded-circle" width="50" />
-
+                  <img
+                    src=""
+                    alt="user"
+                    className="rounded-circle"
+                    width="50"
+                  />
                 </div>
                 <div>
                   <h5 className="message-title mb-0">James Johnson</h5>
-                  <span className="online"></span>
+                  <span className="online" />
 
                   <p className="mb-0">online</p>
-                  <div class="notify"><span class="heartbit"></span> <span class="point"></span></div>
+                  <div class="notify">
+                    <span class="heartbit" /> <span class="point" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -119,7 +125,6 @@ class videoCall extends React.Component {
               <ChatContent />
               <ChatMsgSend />
             </div> */}
-
 
             <div className="prescription-container">
               <Collapse isOpen={this.state.collapse}>
@@ -139,8 +144,6 @@ class videoCall extends React.Component {
                 </Card>
               </Collapse>
             </div>
-
-
           </Col>
         </Row>
       </Fragment>

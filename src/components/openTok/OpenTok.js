@@ -4,11 +4,29 @@ import classNames from "classnames";
 
 import AccCore from "opentok-accelerator-core";
 import "opentok-solutions-css";
+import { Prompt } from "react-router-dom";
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  Button,
+  Modal,
+  Input,
+  Label,
+  Form,
+  FormGroup,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Row,
+  Col
+} from "reactstrap";
 
 // import logo from './logo.svg';
 import config from "./config.json";
 import "./App.css";
 
+let callState = false;
 let otCore;
 const otCoreOptions = {
   credentials: {
@@ -131,7 +149,7 @@ const connectingMask = () => (
 const startCallMask = start => (
   <div className="openTok-mask">
     <button className="message button clickable" onClick={start}>
-      Click to Start Call{" "}
+      Click to Start Call
     </button>
   </div>
 );
@@ -152,6 +170,17 @@ class OpenTok extends Component {
     this.endCall = this.endCall.bind(this);
     this.toggleLocalAudio = this.toggleLocalAudio.bind(this);
     this.toggleLocalVideo = this.toggleLocalVideo.bind(this);
+
+    // window.onbeforeunload = function(e) {
+    //   console.log("onBeforeUnload hit!");
+    //   console.log(e);
+    //   return "Dude, are you sure you want to leave? Think of the kittens!";
+    // };
+    
+  }
+
+  componentWillMount() {
+    console.log("Will Mount");
   }
 
   componentDidMount() {
@@ -192,8 +221,8 @@ class OpenTok extends Component {
       "startViewingSharedScreen",
       "endViewingSharedScreen",
 
-      "showTextChat",
-      "hideTextChat",
+      // "showTextChat",
+      // "hideTextChat",
       "messageSent",
       "errorSendingMessage",
       "messageReceived",
@@ -220,203 +249,208 @@ class OpenTok extends Component {
     // }));
 
     let i = 0;
-    events.forEach(event =>
-      otCore.on(event, ({ publishers, subscribers, meta }) => {
-        this.setState({ publishers, subscribers, meta });
-        console.log({ publishers, subscribers, meta });
 
+    events.forEach(eventName =>
+      otCore.on(eventName, ({ publishers, subscribers, meta }) => {
+        // this.setState({ publishers, subscribers, meta });
+        console.log({ publishers, subscribers, meta });
         console.log(this.state);
 
-        // console.log(event);
-
-        switch (event) {
+        switch (eventName) {
           // session
           case "archiveStarted":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "archiveStopped":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "connectionCreated":
-            console.log(event + " - " + i);
+            // this.startCall();
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "connectionDestroyed":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "sessionConnected":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "sessionDisconnected":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "sessionReconnected":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "sessionReconnecting":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "signal":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "streamCreated":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "streamDestroyed":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "streamPropertyChanged":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
 
           // core
           case "connected":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "startScreenShare":
-            console.log(event + " - " + i);
+            this.setState({ publishers, subscribers, meta });
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "endScreenShare":
-            console.log(event + " - " + i);
+            this.setState({ publishers, subscribers, meta });
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "error":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
 
           // communication
           case "startCall":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
-          case "endCall":
-            console.log(event + " - " + i);
-            i++;
-            break;
+          // case "endCall":
+          //   console.log(eventName + " - " + i);
+          //   i++;
+          //   break;
           case "callPropertyChanged":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "subscribeToCamera":
-            console.log(event + " - " + i);
+            this.setState({ publishers, subscribers, meta });
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "subscribeToScreen":
-            console.log(event + " - " + i);
+            this.setState({ publishers, subscribers, meta });
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "subscribeToSip":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "unsubscribeFromCamera":
-            console.log(event + " - " + i);
+            this.setState({ publishers, subscribers, meta });
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "unsubscribeFromSip":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "unsubscribeFromScreen":
-            console.log(event + " - " + i);
+            this.setState({ publishers, subscribers, meta });
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "startViewingSharedScreen":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "endViewingSharedScreen":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
 
           // textChat
-          case "showTextChat":
-            console.log(event + " - " + i);
-            i++;
-            break;
-          case "hideTextChat":
-            console.log(event + " - " + i);
-            i++;
-            break;
+          // case "showTextChat":
+          //   console.log(eventName + " - " + i);
+          //   i++;
+          //   break;
+          // case "hideTextChat":
+          //   console.log(eventName + " - " + i);
+          //   i++;
+          //   break;
           case "messageSent":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "errorSendingMessage":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "messageReceived":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
 
           // screenSharing
           case "startScreenSharing":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "endScreenSharing":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "screenSharingError":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
 
           // annotation
           case "startAnnotation":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "linkAnnotation":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "resizeCanvas":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "annotationWindowClosed":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "endAnnotation":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
 
           // archiving
           case "startArchive":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "stopArchive":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "archiveReady":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
           case "archiveError":
-            console.log(event + " - " + i);
+            console.log(eventName + " - " + i);
             i++;
             break;
 
@@ -425,25 +459,42 @@ class OpenTok extends Component {
         }
       })
     );
+
+    otCore.on("endCall", event => {
+      console.log(event);
+      console.log(this.state);
+      console.log("endCall" + " - " + i);
+      i++;
+    });
+  }
+
+  componentWillUnmount() {
+    // console.log("Will Unmount");
+    // let r = confirm("Press a button!");
+    // console.log(r);
   }
 
   startCall() {
-    otCore
-      .startCall()
-      .then(({ publishers, subscribers, meta }) => {
-        this.setState({ publishers, subscribers, meta, active: true });
-      })
-      .catch(error => console.log(error));
+    console.log("in start call");
+
+    if (!callState) {
+      callState = true;
+      otCore
+        .startCall()
+        .then(({ publishers, subscribers, meta }) => {
+          this.setState({ publishers, subscribers, meta, active: true });
+        })
+        .catch(error => console.log(error));
+    }
   }
 
   endCall() {
-    this.setState({ active: false });
-    otCore
-      .endCall()
-      .then(({ publishers, subscribers, meta }) => {
-        this.setState({ publishers, subscribers, meta, active: true });
-      })
-      .catch(error => console.log(error));
+    console.log("in end call");
+    if (callState) {
+      callState = false;
+      this.setState({ active: false });
+      otCore.endCall();
+    }
   }
 
   toggleLocalAudio() {
@@ -473,6 +524,13 @@ class OpenTok extends Component {
 
     return (
       <div className="openTok">
+        {/* <Prompt
+          when={callState}
+          onConfirm={console.log("hello")}
+          message={location =>
+            `Are you sure you want to go to ${location.pathname}`
+          }
+        /> */}
         <div className="openTok-main">
           <div className="openTok-video-container">
             {!connected && connectingMask()}
