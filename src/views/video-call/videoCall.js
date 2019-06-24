@@ -25,6 +25,8 @@ import img1 from "../../assets/images/big/img1.jpg";
 import img2 from "../../assets/images/big/img2.jpg";
 import OpenTok from "../../components/openTok/OpenTok";
 
+import userimg from '../../assets/images/users/7.jpg';
+
 class videoCall extends React.Component {
   constructor(props) {
     super(props);
@@ -99,28 +101,27 @@ class videoCall extends React.Component {
             {/* <div className="bg-white chat-list"></div> */}
           </Col>
           <Col xs="12" md="4">
-            <div>
+            <div className="user-container">
               <div className="d-flex align-items-center p-3 border-bottom">
                 <div className="mr-3">
-                  <img
-                    src=""
-                    alt="user"
-                    className="rounded-circle"
-                    width="50"
-                  />
+                  <span className="user-img">
+                    <img src={userimg} alt="user" className="rounded-circle" width="64" />
+
+                  </span>
+
+
                 </div>
                 <div>
                   <h5 className="message-title mb-0">James Johnson</h5>
-                  <span className="online" />
-
                   <p className="mb-0">online</p>
-                  <div class="notify">
-                    <span class="heartbit" /> <span class="point" />
-                  </div>
+
                 </div>
               </div>
             </div>
-            <div id="chat" className="openTok-chat-container" />
+
+            <div >
+              <div id="chat" className="openTok-chat-container" />
+            </div>
             {/* <div className="bg-white chat-list">
               <ChatContent />
               <ChatMsgSend />

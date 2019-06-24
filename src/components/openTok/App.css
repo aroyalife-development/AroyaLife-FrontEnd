@@ -193,6 +193,7 @@ body {
     background-image: url("../../assets/images/icon/paper-plane.png");
     background-repeat: no-repeat;
     background-position: center center;
+    border-radius: 100%;
 }
 
 .ots-text-chat .ots-send-message-box input[type="text"], .ots-text-chat .ots-send-message-box textarea{
@@ -200,19 +201,33 @@ body {
 }
 
 .ots-text-chat .ots-send-message-box {
-    height: 45px;
+    height: 60px;
 }
 .ots-text-chat .ots-send-message-box button{
-    height: 44px;
+    height: 50px;
+    width: 50px;
+    margin-right: 10px;
+    margin-top: 5px;
+    background-color: #1C88E5;
+    border-left: 1px solid #1C88E5;
 }
+
+.ots-text-chat{
+    border: 1px solid #DEE2E6;
+    border-radius: 4px;
+}
+
+.ots-text-chat .ots-send-message-box{
+    border-top: 1px solid #DEE2E6;
+}
+
 
 
 /* 
   ##Device = Desktops
-  ##Screen = 1281px to higher resolution desktops
+  ##Screen = 1440px to higher resolution desktops
 */
-
-@media (min-width: 1281px) {
+@media (min-width: 1440px) {
   
     .openTok-main {
         position: relative;
@@ -229,6 +244,31 @@ body {
     }
     .ots-text-chat .ots-messages-holder{
         height: 400px;
+    }
+    
+  }
+/* 
+  ##Device = Desktops
+  ##Screen = 1281px to higher resolution desktops
+*/
+
+@media (min-width: 1281px) and (max-width: 1440px){
+  
+    .openTok-main {
+        position: relative;
+        /* width: 75vw; */
+        /* height: calc(75vw * .6); */
+        height: 500px;
+        margin: 20px auto;
+        border: 1px solid lightblue;
+    }
+    
+    .prescription-container{
+        height: 200px;
+        margin-top: 20px;
+    }
+    .ots-text-chat .ots-messages-holder{
+        height: 200px;
     }
     
   }
@@ -331,7 +371,10 @@ body {
     .ots-text-chat .ots-messages-holder{
         height: 100px;
     }
-    .ots-text-chat-container{
+    /* .ots-text-chat-container{
+        margin-top: 68px;
+    } */
+    .user-container{
         margin-top: 68px;
     }
     
@@ -359,7 +402,7 @@ body {
     .ots-text-chat .ots-messages-holder{
         height: 100px;
     }
-    .ots-text-chat-container{
+    .user-container{
         margin-top: 68px;
     }
     
