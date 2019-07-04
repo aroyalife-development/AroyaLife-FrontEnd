@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactTable from "react-table";
+import { Link } from 'react-router-dom';
 import treeTableHOC from "react-table/lib/hoc/treeTable";
 import {
     Card,
@@ -15,30 +16,21 @@ class UserAppointments extends React.Component {
         this.state = {}
     }
 
-    handleClick = (e) => {
-        e.preventDefault();
-        // do some things...
-        this.props.push('/videoCall');
-    }
-
-
     render() {
         return (
             <Card>
                 <CardTitle className="mb-0 p-3 border-bottom bg-light">
                     <i className="mdi mdi-border-right mr-2"></i>Appointments
-                    {/* <NavLink href="/videoCall"> */}
-                    <NavLink to="">
+                    <Link to="/videoCall">
                         <Button
                             color="success"
-                            onClick={this.handleClick}
                             style={{ 'marginBottom': '1rem' }}
                             className="btn float-right"
                         >
                             <i className="mdi mdi-phone" />
                             <span className="ml-2">Make a Call</span>
                         </Button>
-                    </NavLink>
+                    </Link>
                 </CardTitle>
                 <CardBody>
                     <ReactTable
