@@ -106,15 +106,13 @@ class videoCall extends React.Component {
                 <div className="mr-3">
                   <span className="user-img">
                     <img src={userimg} alt="user" className="rounded-circle" width="64" />
-
                   </span>
-
-
                 </div>
                 <div>
                   <h5 className="message-title mb-0">James Johnson</h5>
-                  <p className="mb-0">online</p>
-
+                  <p className="mb-0">
+                    <span className="mdi mdi-brightness-1 heartbit" style={{ color: "green" }}></span>
+                    online</p>
                 </div>
               </div>
             </div>

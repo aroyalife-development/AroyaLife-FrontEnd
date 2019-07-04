@@ -5,8 +5,9 @@ class Footer extends React.Component {
   render() {
     return (
       <footer className="footer text-center">
-        All Rights Reserved by Aroya Life. Designed and Developed by{' '}
-        <a href="https://trumpcode.com/">TrumpCode(Pvt).Ltd</a>.
+        <br />
+        {/* All Rights Reserved by Aroya Life. Designed and Developed by{' '}
+        <a href="https://trumpcode.com/">TrumpCode(Pvt).Ltd</a>. */}
       </footer>
     );
   }

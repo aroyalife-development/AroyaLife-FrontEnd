@@ -108,6 +108,14 @@ import videoCall from '../views/video-call/videoCall';
 /*                               Appointment                                      */
 /*--------------------------------------------------------------------------------*/
 import appointments from '../views/appointments/userAppointments';
+/*--------------------------------------------------------------------------------*/
+/*                               Patients                                         */
+/*--------------------------------------------------------------------------------*/
+import patients from '../views/patients/patients';
+/*--------------------------------------------------------------------------------*/
+/*                               Recommendation cards                             */
+/*--------------------------------------------------------------------------------*/
+import recommendationCards from '../views/recommendationCards/recommendationCards';
 
 var auths = [].concat(AuthRoutes);
 
@@ -629,6 +637,18 @@ var ThemeRoutes = [
 		name: 'Appointments',
 		icon: 'mdi mdi-calendar-clock',
 		component: appointments
+	},
+	{
+		path: '/patients',
+		name: 'Patients',
+		icon: 'mdi mdi-account-outline',
+		component: patients
+	},
+	{
+		path: '/recommendationCards',
+		name: 'Recommendation',
+		icon: 'mdi mdi-cards-outline',
+		component: recommendationCards
 	}
 ];
 export default ThemeRoutes;

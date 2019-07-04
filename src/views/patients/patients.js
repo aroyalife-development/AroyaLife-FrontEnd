@@ -9,55 +9,28 @@ import {
 } from 'reactstrap';
 import "react-table/react-table.css";
 
-class UserAppointments extends React.Component {
+class Client extends React.Component {
     constructor(props) {
         super(props);
         this.state = {}
     }
-
-    handleClick = (e) => {
-        e.preventDefault();
-        // do some things...
-        this.props.push('/videoCall');
-    }
-
-
     render() {
         return (
             <Card>
                 <CardTitle className="mb-0 p-3 border-bottom bg-light">
-                    <i className="mdi mdi-border-right mr-2"></i>Appointments
-                    {/* <NavLink href="/videoCall"> */}
-                    <NavLink to="">
-                        <Button
-                            color="success"
-                            onClick={this.handleClick}
-                            style={{ 'marginBottom': '1rem' }}
-                            className="btn float-right"
-                        >
-                            <i className="mdi mdi-phone" />
-                            <span className="ml-2">Make a Call</span>
-                        </Button>
-                    </NavLink>
+                    <i className="mdi mdi-border-right mr-2"></i>Patients
+
                 </CardTitle>
                 <CardBody>
                     <ReactTable
                         columns={[
                             {
-                                Header: "Date",
-                                accessor: "date"
+                                Header: "Patient Name",
+                                accessor: "patient name"
                             },
                             {
-                                Header: "Time",
-                                accessor: "time"
-                            },
-                            {
-                                Header: "Duration",
-                                accessor: "duration"
-                            },
-                            {
-                                Header: "Provider Name",
-                                accessor: "providerName"
+                                Header: "Registerd Date",
+                                accessor: "registerd date"
                             },
                             {
                                 Header: "Call Status",
@@ -89,4 +62,4 @@ class UserAppointments extends React.Component {
     }
 }
 
-export default UserAppointments;
+export default Client;
