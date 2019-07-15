@@ -9,6 +9,10 @@ import {
   Button,
   Card,
   CardBody,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   CardImg,
   CardTitle,
   UncontrolledCollapse,
@@ -26,16 +30,24 @@ import img2 from "../../assets/images/big/img2.jpg";
 import OpenTok from "../../components/openTok/OpenTok";
 
 import userimg from '../../assets/images/users/7.jpg';
+import "./videoCall.css";
+
 
 class videoCall extends React.Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { collapse: false };
+    this.toggle1 = this.toggle1.bind(this);
+    this.state = { collapse: false, 'modal': false };
   }
 
   toggle() {
     this.setState({ collapse: !this.state.collapse });
+  }
+  toggle1() {
+    this.setState({
+      'modal': !this.state.modal
+    });
   }
 
   transfer() {
@@ -143,6 +155,62 @@ class videoCall extends React.Component {
                 </Card>
               </Collapse>
             </div>
+          </Col>
+          <Col xs="12" md="6">
+            <Card>
+              <CardTitle className="bg-light border-bottom p-3 mb-0">
+                <i className="mdi mdi mdi-tablet mr-2"> </i>
+                Modals
+              </CardTitle>
+
+              <CardBody className="">
+                <Button color="danger" onClick={this.toggle1}>
+                  Launch Modal
+                </Button>
+                <Modal
+                  isOpen={this.state.modal}
+                  toggle={this.toggle1}
+                  className={this.props.className}
+                >
+                  <ModalBody>
+                    <div class="intro-banner-vdo-play-btn pinkBg" >
+
+                      <img
+                        src={userimg}
+                        alt="user"
+                        className="rounded-circle call-img"
+                        width="100"
+                      />
+                      <span class="ripple pinkBg"></span>
+                      <span class="ripple pinkBg"></span>
+                      <span class="ripple pinkBg"></span>
+
+                    </div>
+                    {/* <center> */}
+                    <div align="center">
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <h2>Buddhi Hasanka</h2>
+                      <h6>is calling...</h6>
+                      <br />
+                      <button type="button" className="btn btn-success btn-circle btn-xl mr-5 ">
+                        <i className="mdi mdi-phone"></i>
+                      </button>
+
+                      <button type="button" className="btn btn-danger btn-circle btn-xl ml-5">
+                        <i className="mdi mdi-phone-hangup"></i>
+                      </button>
+                      <br />
+                      <br />
+                    </div>
+                    {/* </center> */}
+                  </ModalBody>
+
+                </Modal>
+              </CardBody>
+            </Card>
           </Col>
         </Row>
       </Fragment>
