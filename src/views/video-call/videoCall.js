@@ -25,7 +25,7 @@ import img1 from "../../assets/images/big/img1.jpg";
 import img2 from "../../assets/images/big/img2.jpg";
 import OpenTok from "../../components/openTok/OpenTok";
 
-import userimg from '../../assets/images/users/7.jpg';
+import userimg from "../../assets/images/users/7.jpg";
 
 class videoCall extends React.Component {
   constructor(props) {
@@ -62,40 +62,6 @@ class videoCall extends React.Component {
                 prescriptionHandler={this.toggle}
                 transferHandler={this.transfer}
               />
-              <div>
-                {/* <Button
-                  color="warning"
-                  // onClick={this.toggle}
-                  style={{ marginBottom: "1rem" }}
-                  className="btn"
-                >
-                  <i className="mdi mdi-transfer" />
-                </Button> */}
-                {/* <Collapse isOpen={this.state.collapse}>
-                                    <Card className="border">
-                                        <CardBody>
-                                            <Form className="form-material">
-                                                <FormGroup>
-                                                    <Label>Add Prescription</Label>
-                                                    <Input type="textarea" rows="4" />
-                                                    <br />
-                                                    <Button className="btn" color="success">
-                                                        Submit
-                                                    </Button>
-                                                </FormGroup>
-                                            </Form>
-                                        </CardBody>
-                                    </Card>
-                                </Collapse> */}
-                {/* <Button
-                  color="success"
-                  onClick={this.toggle}
-                  style={{ marginBottom: "1rem" }}
-                  className="ml-2"
-                >
-                  <i className="mdi mdi-medical-bag" />
-                </Button> */}
-              </div>
             </div>
 
             {/* <div className="bg-white chat-list"></div> */}
@@ -105,21 +71,22 @@ class videoCall extends React.Component {
               <div className="d-flex align-items-center p-3 border-bottom">
                 <div className="mr-3">
                   <span className="user-img">
-                    <img src={userimg} alt="user" className="rounded-circle" width="64" />
-
+                    <img
+                      src={userimg}
+                      alt="user"
+                      className="rounded-circle"
+                      width="64"
+                    />
                   </span>
-
-
                 </div>
                 <div>
                   <h5 className="message-title mb-0">James Johnson</h5>
                   <p className="mb-0">online</p>
-
                 </div>
               </div>
             </div>
 
-            <div >
+            <div>
               <div id="chat" className="openTok-chat-container" />
             </div>
             {/* <div className="bg-white chat-list">

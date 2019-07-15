@@ -4,7 +4,6 @@ import classNames from "classnames";
 
 import AccCore from "opentok-accelerator-core";
 import "opentok-solutions-css";
-import { Prompt } from "react-router-dom";
 import {
   Card,
   CardBody,
@@ -21,8 +20,6 @@ import {
   Row,
   Col
 } from "reactstrap";
-
-// import logo from './logo.svg';
 import config from "./config.json";
 import "./App.css";
 
@@ -145,18 +142,26 @@ const connectingMask = () => (
     <div className="message with-spinner">Connecting</div>
   </div>
 );
-
 const startCallMask = start => (
   <div className="openTok-mask">
-    <button className="message button clickable" onClick={start}>
+    <button className="message button clickable" onClick={start} id="callBTN">
       Click to Start Call
     </button>
   </div>
 );
 
+// const answerCallMask = start => (
+//   <div className="openTok-mask">
+//     <button className="message button clickable" onClick={start}>
+//       Answer The Call
+//     </button>
+//   </div>
+// );
+
 class OpenTok extends Component {
   constructor(props) {
     super(props);
+    console.log("-------------------------------------------- constructor");
     this.state = {
       connected: false,
       active: false,
@@ -170,25 +175,32 @@ class OpenTok extends Component {
     this.endCall = this.endCall.bind(this);
     this.toggleLocalAudio = this.toggleLocalAudio.bind(this);
     this.toggleLocalVideo = this.toggleLocalVideo.bind(this);
-
-    // window.onbeforeunload = function(e) {
-    //   console.log("onBeforeUnload hit!");
-    //   console.log(e);
-    //   return "Dude, are you sure you want to leave? Think of the kittens!";
-    // };
-    
   }
 
   componentWillMount() {
-    console.log("Will Mount");
+    console.log("-------------------------------------------- Will Mount");
+    otCore = window.otCore;
+    this.setState({ connected: true });
+    console.log(otCore);
   }
 
+  // static getDerivedStateFromProps(props, state){
+  //   console.log("-------------------------------------------- DerivedStateFromProps");
+  //   return false;
+  // }
+
   componentDidMount() {
-    otCore = new AccCore(otCoreOptions);
-    otCore
-      .connect()
-      .then(() => this.setState({ connected: true }))
-      .catch(error => console.log(error));
+    console.log("-------------------------------------------- Did Mount");
+    // otCore = new AccCore(otCoreOptions);
+    // otCore
+    //   .connect()
+    //   .then(() => this.setState({ connected: true }))
+    //   .catch(error => console.log(error));
+
+    // otCore = window.otCore;
+    // this.setState({ connected: true });
+    // if (otCore) {
+    // }
 
     const events = [
       "archiveStarted",
@@ -257,7 +269,7 @@ class OpenTok extends Component {
         console.log(this.state);
 
         switch (eventName) {
-          // session
+          // ---------------------- Session Events ----------------------
           case "archiveStarted":
             console.log(eventName + " - " + i);
             i++;
@@ -267,7 +279,6 @@ class OpenTok extends Component {
             i++;
             break;
           case "connectionCreated":
-            // this.startCall();
             console.log(eventName + " - " + i);
             i++;
             break;
@@ -297,10 +308,19 @@ class OpenTok extends Component {
             break;
           case "streamCreated":
             console.log(eventName + " - " + i);
+            if (!this.state.active) {
+              document.getElementById("callBTN").innerHTML = "Answer The Call";
+            }
             i++;
             break;
           case "streamDestroyed":
             console.log(eventName + " - " + i);
+            if (!this.state.active) {
+              document.getElementById("callBTN").innerHTML =
+                "Click to Start Call";
+            } else {
+              this.endCall();
+            }
             i++;
             break;
           case "streamPropertyChanged":
@@ -308,7 +328,7 @@ class OpenTok extends Component {
             i++;
             break;
 
-          // core
+          // ------------------------ Core Events -----------------------
           case "connected":
             console.log(eventName + " - " + i);
             i++;
@@ -328,7 +348,7 @@ class OpenTok extends Component {
             i++;
             break;
 
-          // communication
+          // -------------------- Communication Events ------------------
           case "startCall":
             console.log(eventName + " - " + i);
             i++;
@@ -378,7 +398,7 @@ class OpenTok extends Component {
             i++;
             break;
 
-          // textChat
+          // ----------------------- TextChat Events --------------------
           // case "showTextChat":
           //   console.log(eventName + " - " + i);
           //   i++;
@@ -400,6 +420,7 @@ class OpenTok extends Component {
             i++;
             break;
 
+          // -------------------- ScreenSharing Events ------------------
           // screenSharing
           case "startScreenSharing":
             console.log(eventName + " - " + i);
@@ -459,7 +480,6 @@ class OpenTok extends Component {
         }
       })
     );
-
     otCore.on("endCall", event => {
       console.log(event);
       console.log(this.state);
@@ -468,14 +488,26 @@ class OpenTok extends Component {
     });
   }
 
+  shouldComponentUpdate() {
+    console.log(
+      "-------------------------------------------- Should Component Update"
+    );
+    return true;
+  }
+
+  componentDidUpdate() {
+    console.log(
+      "-------------------------------------------- Should Component Update"
+    );
+  }
+
   componentWillUnmount() {
-    // console.log("Will Unmount");
-    // let r = confirm("Press a button!");
-    // console.log(r);
+    console.log("-------------------------------------------- Will Unmount");
+    this.endCall();
   }
 
   startCall() {
-    console.log("in start call");
+    console.log("In Start Call");
 
     if (!callState) {
       callState = true;
@@ -489,7 +521,7 @@ class OpenTok extends Component {
   }
 
   endCall() {
-    console.log("in end call");
+    console.log("In End Call");
     if (callState) {
       callState = false;
       this.setState({ active: false });
@@ -508,7 +540,7 @@ class OpenTok extends Component {
   }
 
   render() {
-    const { connected, active } = this.state;
+    const { connected, active, stream } = this.state;
     const {
       localPrescriptionClass,
       localTransferClass,
@@ -522,15 +554,13 @@ class OpenTok extends Component {
       screenSubscriberClass
     } = containerClasses(this.state);
 
+    console.log("--------------------- 12 - ", window.connected);
+    console.log("--------------------- 12 - ", window.otCore);
+    console.log("--------------------- 12 - ", this.state);
+    console.log("--------------------- 12 - ", connected);
+
     return (
       <div className="openTok">
-        {/* <Prompt
-          when={callState}
-          onConfirm={console.log("hello")}
-          message={location =>
-            `Are you sure you want to go to ${location.pathname}`
-          }
-        /> */}
         <div className="openTok-main">
           <div className="openTok-video-container">
             {!connected && connectingMask()}
