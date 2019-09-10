@@ -1,10 +1,15 @@
 import React, { Component } from "react";
 import indexRoutes from "./routes/";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "./redux/store";
 import AccCore from "opentok-accelerator-core";
 import config from "./components/openTok/config.json";
+import userimg from "./assets/images/users/7.jpg";
+import "./views/video-call/videoCall.css";
+
+import { Modal, ModalBody, Button } from "reactstrap";
 
 let otCore;
 const otCoreOptions = {
@@ -65,6 +70,45 @@ const otCoreOptions = {
 };
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.toggleCallRingModal = this.toggleCallRingModal.bind(this);
+    this.endCall = this.endCall.bind(this);
+    this.answerCall = this.answerCall.bind(this);
+    this.state = { collapse: false, modal: false };
+  }
+
+  toggleCallRingModal() {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
+
+  answerCall() {
+    if (this.state.modal) {
+      otCore
+        .signal("callStatus", "startCall")
+        .then(() => {
+          console.log("startCall......");
+        })
+        .catch(error => console.log(error));
+    }
+    this.toggleCallRingModal();
+    // props.history.push("/videoCall")
+  }
+
+  endCall() {
+    if (this.state.modal) {
+      otCore
+        .signal("callStatus", "endCall")
+        .then(() => {
+          console.log("endCall......");
+        })
+        .catch(error => console.log(error));
+    }
+    this.toggleCallRingModal();
+  }
+
   componentWillMount() {
     otCore = new AccCore(otCoreOptions);
     otCore
@@ -159,6 +203,7 @@ class App extends Component {
             i++;
             break;
           case "sessionConnected":
+            otCore.se;
             console.log(eventName + " - " + i + " app - " + i);
             i++;
             break;
@@ -180,19 +225,12 @@ class App extends Component {
             break;
           case "streamCreated":
             console.log(eventName + " - " + i + " app - " + i);
-            if (!this.state.active) {
-              // document.getElementById("callBTN").innerHTML = "Answer The Call";
-            }
+            this.toggleCallRingModal();
             i++;
             break;
           case "streamDestroyed":
             console.log(eventName + " - " + i + " app - " + i);
-            if (!this.state.active) {
-              // document.getElementById("callBTN").innerHTML =
-              //   "Click to Start Call";
-            } else {
-              this.endCall();
-            }
+
             i++;
             break;
           case "streamPropertyChanged":
@@ -355,7 +393,14 @@ class App extends Component {
     otCore.on("endCall", event => {
       console.log(event);
       console.log(this.state);
-      console.log("endCall" + " - " + i);
+      console.log("endCall - " + i + " app - " + i);
+      // console.log("window.callStatus", window.callStatus);
+      i++;
+    });
+    otCore.on("signal", event => {
+      console.log(event);
+      console.log(this.state);
+      console.log("signal - " + i + " app - " + i);
       i++;
     });
   }
@@ -364,13 +409,60 @@ class App extends Component {
     return (
       <Provider store={configureStore()}>
         <Router basename="/">
-          <Switch>
-            {indexRoutes.map((prop, key) => {
-              return (
-                <Route path={prop.path} key={key} component={prop.component} />
-              );
-            })}
-          </Switch>
+          <div>
+            <Switch>
+              {indexRoutes.map((prop, key) => {
+                return (
+                  <Route
+                    path={prop.path}
+                    key={key}
+                    component={prop.component}
+                  />
+                );
+              })}
+            </Switch>
+            <Modal
+              isOpen={this.state.modal}
+              toggle={this.toggleCallRingModal}
+              className={this.props.className}
+            >
+              <ModalBody>
+                <div className="intro-banner-vdo-play-btn pinkBg mb-5">
+                  <img
+                    src={userimg}
+                    alt="user"
+                    className="rounded-circle call-img"
+                    width="100"
+                  />
+                  <span className="ripple pinkBg" />
+                  <span className="ripple pinkBg" />
+                  <span className="ripple pinkBg" />
+                </div>
+                <div align="center">
+                  <h2>Buddhi Hasanka</h2>
+                  <h6>is calling...</h6>
+                  <br />
+                  <Link
+                    to="/videoCall"
+                    onClick={this.answerCall}
+                    type="button"
+                    className="btn btn-success btn-circle btn-xl mr-5 "
+                  >
+                    <i className="mdi mdi-phone" />
+                  </Link>
+                  <button
+                    onClick={this.endCall}
+                    type="button"
+                    className="btn btn-danger btn-circle btn-xl ml-5"
+                  >
+                    <i className="mdi mdi-phone-hangup" />
+                  </button>
+                  <br />
+                  <br />
+                </div>
+              </ModalBody>
+            </Modal>
+          </div>
         </Router>
       </Provider>
     );
@@ -378,3 +470,16 @@ class App extends Component {
 }
 
 export default App;
+
+{
+  /* <Link to="/videoCall">
+  <Button
+    color="success"
+    style={{ marginBottom: "1rem" }}
+    className="btn float-right"
+  >
+    <i className="mdi mdi-phone" />
+    <span className="ml-2">Make a Call</span>
+  </Button>
+</Link>; */
+}

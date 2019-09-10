@@ -18,8 +18,6 @@ import {
 } from "reactstrap";
 import "react-table/react-table.css";
 
-import { Link } from "react-router-dom";
-
 class UserAppointments extends React.Component {
   constructor(props) {
     super(props);

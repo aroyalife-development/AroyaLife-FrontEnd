@@ -302,25 +302,17 @@ class OpenTok extends Component {
             console.log(eventName + " - " + i);
             i++;
             break;
-          case "signal":
-            console.log(eventName + " - " + i);
-            i++;
-            break;
+          // case "signal":
+          //   console.log(eventName + " - " + i);
+          //   i++;
+          //   break;
           case "streamCreated":
             console.log(eventName + " - " + i);
-            if (!this.state.active) {
-              document.getElementById("callBTN").innerHTML = "Answer The Call";
-            }
             i++;
             break;
           case "streamDestroyed":
             console.log(eventName + " - " + i);
-            if (!this.state.active) {
-              document.getElementById("callBTN").innerHTML =
-                "Click to Start Call";
-            } else {
-              this.endCall();
-            }
+            this.endCall();
             i++;
             break;
           case "streamPropertyChanged":
@@ -486,6 +478,18 @@ class OpenTok extends Component {
       console.log("endCall" + " - " + i);
       i++;
     });
+    otCore.on("signal", event => {
+      console.log(event);
+      console.log(this.state);
+      console.log("signal" + " - " + i);
+      console.log("JSON.parse(event).data", JSON.parse(event.data));
+      if (callState && JSON.parse(event.data) === "endCall") {
+        this.endCall();
+      } else if (!callState && JSON.parse(event.data) === "startCall") {
+        this.startCall();
+      }
+      i++;
+    });
   }
 
   shouldComponentUpdate() {
@@ -508,7 +512,6 @@ class OpenTok extends Component {
 
   startCall() {
     console.log("In Start Call");
-
     if (!callState) {
       callState = true;
       otCore
@@ -522,7 +525,10 @@ class OpenTok extends Component {
 
   endCall() {
     console.log("In End Call");
+    console.log("callState", callState);
     if (callState) {
+      console.log("InSide");
+      window.callStatus = undefined;
       callState = false;
       this.setState({ active: false });
       otCore.endCall();
