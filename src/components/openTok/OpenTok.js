@@ -199,10 +199,8 @@ class OpenTok extends Component {
     //   .then(() => this.setState({ connected: true }))
     //   .catch(error => console.log(error));
 
-    // otCore = window.otCore;
-    // this.setState({ connected: true });
-    // if (otCore) {
-    // }
+    otCore = window.otCore;
+    this.setState({ connected: true });
 
     const events = [
       "archiveStarted",
