@@ -72,7 +72,7 @@ class videoCall extends React.Component {
             {/* <div className="bg-white chat-list"></div> */}
           </Col>
           <Col xs="12" md="4">
-            <div className="user-container">
+            {/* <div className="user-container">
               <div className="d-flex align-items-center p-3 border-bottom">
                 <div className="mr-3">
                   <span className="user-img">
@@ -95,15 +95,15 @@ class videoCall extends React.Component {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            <div>
+            {/* <div>
               <div id="chat" className="openTok-chat-container" />
-            </div>
-            {/* <div className="bg-white chat-list">
+            </div> */}
+            <div className="bg-white chat-list">
               <ChatContent />
               <ChatMsgSend />
-            </div> */}
+            </div>
 
             <div className="prescription-container">
               <Collapse isOpen={this.state.collapse}>
