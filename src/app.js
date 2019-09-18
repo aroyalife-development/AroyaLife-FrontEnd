@@ -12,6 +12,7 @@ import "./views/video-call/videoCall.css";
 import { Modal, ModalBody, Button } from "reactstrap";
 
 let otCore;
+let callState = false;
 const otCoreOptions = {
   credentials: {
     apiKey: config.apiKey,
@@ -115,7 +116,6 @@ class App extends Component {
       .connect()
       .then()
       .catch(error => console.log(error));
-
     window.otCore = otCore;
 
     const events = [
@@ -225,12 +225,19 @@ class App extends Component {
             break;
           case "streamCreated":
             console.log(eventName + " - " + i + " app - " + i);
-            this.toggleCallRingModal();
+            console.log("callState - ", callState);
+
+            if (!callState) {
+              this.toggleCallRingModal();
+            }
             i++;
             break;
           case "streamDestroyed":
             console.log(eventName + " - " + i + " app - " + i);
-
+            if (this.state.modal) {
+              this.toggleCallRingModal();
+              callState = false;
+            }
             i++;
             break;
           case "streamPropertyChanged":
@@ -394,13 +401,22 @@ class App extends Component {
       console.log(event);
       console.log(this.state);
       console.log("endCall - " + i + " app - " + i);
+      callState = false;
       // console.log("window.callStatus", window.callStatus);
       i++;
     });
     otCore.on("signal", event => {
       console.log(event);
       console.log(this.state);
+      console.log(this.state.modal);
       console.log("signal - " + i + " app - " + i);
+
+      if (JSON.parse(event.data) === "endCall") {
+        callState = false;
+      } else if (JSON.parse(event.data) === "startCall") {
+        callState = true;
+      }
+
       i++;
     });
   }
