@@ -517,6 +517,7 @@ class OpenTok extends Component {
 
   startCall() {
     console.log("In Start Call");
+    console.log("callState", callState);
     if (!callState) {
       callState = true;
       otCore

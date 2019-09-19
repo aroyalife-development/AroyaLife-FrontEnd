@@ -13,6 +13,8 @@ import { Modal, ModalBody, Button } from "reactstrap";
 
 let otCore;
 let callState = false;
+let onlineStatus = 0;
+
 const otCoreOptions = {
   credentials: {
     apiKey: config.apiKey,
@@ -110,6 +112,10 @@ class App extends Component {
     this.toggleCallRingModal();
   }
 
+  componentDidUpdate(){
+    console.log('-------------------------------------- componentDidUpdate - app');
+  }
+
   componentWillMount() {
     otCore = new AccCore(otCoreOptions);
     otCore
@@ -196,10 +202,18 @@ class App extends Component {
             break;
           case "connectionCreated":
             console.log(eventName + " - " + i + " app - " + i);
+            onlineStatus++;
+            if(onlineStatus === 2){
+              console.log('onlineStatus ------------ ONLINE');
+            } else {
+              console.log('onlineStatus ------------ OFFLINE');
+            }
             i++;
             break;
           case "connectionDestroyed":
             console.log(eventName + " - " + i + " app - " + i);
+            onlineStatus--;
+            console.log('onlineStatus ------------ OFFLINE');
             i++;
             break;
           case "sessionConnected":
