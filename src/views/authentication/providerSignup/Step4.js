@@ -55,6 +55,7 @@ export default class Step4 extends Component {
                     className="btn btn-prev btn-success btn-lg pull-right"
                     onClick={() => {
                       this.props.jumpToStep(4);
+                      this.props.savePatient();
                     }}
                   >
                     Save

@@ -10,6 +10,7 @@ import Maintanance from '../views/authentication/maintanance';
 import PatientLogin from '../views/authentication/patientLogin';
 import Subscription from '../views/authentication/subscription';
 import PatientSignup from '../views/authentication/patientSignup/patientSignup';
+import ProviderSignup from '../views/authentication/providerSignup/providerSignup';
 
 var authRoutes = [
     { path: '/authentication/login', name: 'Login', icon: 'mdi mdi-account-key', component: Login },
@@ -23,5 +24,7 @@ var authRoutes = [
     { path: '/authentication/patientLogin', name: 'Patient Login', icon: 'mdi mdi-account-key', component: PatientLogin },
     { path: '/authentication/subscription', name: 'Subscription Plan', icon: 'mdi mdi-account-plus', component: Subscription },
     { path: '/authentication/patientSignup', name: 'Patient Signup', icon: 'mdi mdi-account-plus', component: PatientSignup },
+
+    { path: '/authentication/providerSignup', name: 'providerSignup Signup', icon: 'mdi mdi-account-plus', component: ProviderSignup },
 ];
 export default authRoutes; 

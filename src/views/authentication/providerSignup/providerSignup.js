@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Card, CardBody, CardTitle, Navbar, NavbarBrand } from "reactstrap";
 
-import PatientSignupStepper from "./patientSignupStepper";
+import ProviderSignupStepper from "./ProviderSignupStepper";
 
 import img2 from "../../../assets/images/big/Aroya_Life_subcription_Background-01.jpg";
 import logodarkicon from "../../../assets/images/login/AroyaLifeLogo.png";
-import { getUserRole } from "./patient-service";
 
 import axios from "axios";
 import { environment } from "../../../environments";
@@ -16,18 +15,23 @@ const sidebarBackground = {
   backgroundPosition: "center center"
 };
 
-class PatientSignup extends Component {
+class ProviderSignup extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
-      surname: "",
-      mobile: "",
-      gender: "",
+      title: "",
+      firstName: "",
+      lastName: "",
+      slmcNo: "",
       birthDay: "",
+      gender: "",
+      mobile: "",
+      deliveryAddress: "",
+      specialization: "",
       accName: "",
       email: "",
-      password: ""
+      password: "",
+      specializationList: []
     };
   }
 
@@ -42,6 +46,18 @@ class PatientSignup extends Component {
   };
 
   componentDidMount() {
+    axios
+      .get(environment.baseUrl + "specialization")
+      .then(response => {
+        this.setState({
+          specializationList: response.data.content
+        });
+        // return response;
+      })
+      .catch(error => {
+        console.log("------------------- error - ", error);
+        // return error;
+      });
   }
 
   render() {
@@ -69,12 +85,12 @@ class PatientSignup extends Component {
               <CardBody className="border-bottom">
                 <CardTitle className="mb-0">
                   {/* <i className="mdi mdi-border-right mr-2"></i> */}
-                  Signup as a Patient
+                  Signup as a Provider
                 </CardTitle>
               </CardBody>
               <CardBody>
-                <PatientSignupStepper
-                  patientState={this.state}
+                <ProviderSignupStepper
+                  providerState={this.state}
                   updateState={this.updateState}
                 />
               </CardBody>
@@ -86,4 +102,4 @@ class PatientSignup extends Component {
   }
 }
 
-export default PatientSignup;
+export default ProviderSignup;
