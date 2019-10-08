@@ -22,7 +22,7 @@ import {
 } from "reactstrap";
 import "react-table/react-table.css";
 import provider from "../../assets/images/provider-image/provider-catagory.jpg";
-import providergif from "../../assets/images/provider-image/animat-search-color.gif";
+import providergif from "../../assets/images/provider-image/provider-search.gif";
 
 class UserAppointments extends React.Component {
   constructor(props) {

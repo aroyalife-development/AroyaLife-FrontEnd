@@ -1,11 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Card, CardBody, Form, Input, Row, Col, Button } from 'reactstrap';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import Message from './message.js';
+import React from "react";
+import ReactDOM from "react-dom";
+import { Card, CardBody, Form, Input, Row, Col, Button } from "reactstrap";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import Message from "./message.js";
 
-import user1 from '../../../assets/images/users/1.jpg';
-import user2 from '../../../assets/images/users/2.jpg';
+import user1 from "../../../assets/images/users/1.jpg";
+import user2 from "../../../assets/images/users/2.jpg";
 
 class Chat extends React.Component {
   constructor(props) {
@@ -13,52 +13,52 @@ class Chat extends React.Component {
     this.state = {
       chats: [
         {
-          username: 'Kevin Hsu',
-          content: 'Hello World!',
+          username: "Kevin Hsu",
+          content: "Hello World!",
           img: user1,
           id: 1
         },
         {
-          username: 'Alice Chen',
-          content: 'Love it! :heart:',
+          username: "Alice Chen",
+          content: "Love it! :heart:",
           img: user1,
           id: 2
         },
         {
-          username: 'Kevin Hsu',
-          content: 'Check out my Github at https://github.com/WigoHunter',
+          username: "Kevin Hsu",
+          content: "Check out my Github at https://github.com/WigoHunter",
           img: user1,
           id: 3
         },
         {
-          username: 'KevHs',
+          username: "KevHs",
           content:
-            'Lorem ipsum dolor sit amet, nibh ipsum. Cum class sem inceptos incidunt sed sed. Tempus wisi enim id, arcu sed lectus aliquam, nulla vitae est bibendum molestie elit risus.',
+            "Lorem ipsum dolor sit amet, nibh ipsum. Cum class sem inceptos incidunt sed sed. Tempus wisi enim id, arcu sed lectus aliquam, nulla vitae est bibendum molestie elit risus.",
           img: user2,
           id: 4
         },
         {
-          username: 'Kevin Hsu',
-          content: 'So',
+          username: "Kevin Hsu",
+          content: "So",
           img: user1,
           id: 5
         },
         {
-          username: 'Kevin Hsu',
+          username: "Kevin Hsu",
           content:
-            'Chilltime is going to be an app for you to view videos with friends',
+            "Chilltime is going to be an app for you to view videos with friends",
           img: user1,
           id: 6
         },
         {
-          username: 'Kevin Hsu',
-          content: 'You can sign-up now to try out our private beta!',
+          username: "Kevin Hsu",
+          content: "You can sign-up now to try out our private beta!",
           img: user1,
           id: 7
         },
         {
-          username: 'Alice Chen',
-          content: 'Definitely! Sounds great!',
+          username: "Alice Chen",
+          content: "Definitely! Sounds great!",
           img: user1,
           id: 8
         }
@@ -87,20 +87,20 @@ class Chat extends React.Component {
       {
         chats: this.state.chats.concat([
           {
-            username: 'Kevin Hsu',
+            username: "Kevin Hsu",
             content: <span>{ReactDOM.findDOMNode(this.msg).value}</span>,
             img: user2
           }
         ])
       },
       () => {
-        ReactDOM.findDOMNode(this.msg).value = '';
+        ReactDOM.findDOMNode(this.msg).value = "";
       }
     );
   }
 
   render() {
-    const username = 'Kevin Hsu';
+    const username = "Kevin Hsu";
     const { chats } = this.state;
     return (
       /*--------------------------------------------------------------------------------*/
@@ -108,10 +108,15 @@ class Chat extends React.Component {
       /*--------------------------------------------------------------------------------*/
       <Card>
         <CardBody>
-          <h5 className="mb-4">Recent Chats</h5>
-          <div className="chat-box" style={{ height: '475px' }}>
+          {/* <h5 className="mb-4">Recent Chats</h5> */}
+          <div className="chat-box" style={{ height: "350px" }}>
             <PerfectScrollbar>
-              <ul className="chat-list p-4" ref={(e) => { this.chats = e; }}>
+              <ul
+                className="chat-list p-4"
+                ref={e => {
+                  this.chats = e;
+                }}
+              >
                 {chats.map((chat, index) => (
                   <Message key={index} chat={chat} user={username} />
                 ))}
@@ -126,7 +131,9 @@ class Chat extends React.Component {
                     <Input
                       placeholder="Type and enter"
                       // ref="msg"
-                      ref={(d) => { this.msg = d; }}
+                      ref={d => {
+                        this.msg = d;
+                      }}
                       className="form-control border-0"
                       type="text"
                     />
