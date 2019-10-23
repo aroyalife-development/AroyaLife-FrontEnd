@@ -116,6 +116,10 @@ import patients from "../views/patients/patients";
 /*                               Recommendation cards                             */
 /*--------------------------------------------------------------------------------*/
 import recommendationCards from "../views/recommendationCards/recommendationCards";
+/*--------------------------------------------------------------------------------*/
+/*                               Call Log                             */
+/*--------------------------------------------------------------------------------*/
+import callLog from "../views/call-log/call-log";
 
 var auths = [].concat(AuthRoutes);
 
@@ -649,6 +653,12 @@ var ThemeRoutes = [
     name: "Recommendation",
     icon: "mdi mdi-cards-outline",
     component: recommendationCards
+  },
+  {
+    path: "/callLog",
+    name: "Call Log",
+    icon: "mdi mdi-phone-log",
+    component: callLog
   }
 ];
 export default ThemeRoutes;
