@@ -25,12 +25,11 @@ export const save = body => {
       gender: body.gender,
       deliveryAddress: body.deliveryAddress,
       mobile: body.mobile,
-      specialization: { id: body.specialization },
+      specializations: [{ id: body.specialization }],
       user: {
         accName: body.accName,
         email: body.email,
         password: body.password,
-        role: { id: "ec21ff12b34a21bece175e48a059ec7f" }
       }
     })
     .then(response => {

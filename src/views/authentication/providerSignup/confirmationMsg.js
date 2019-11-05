@@ -7,12 +7,14 @@ const ConfirmationMsg = props => {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography variant="h4" gutterBottom>
-            Thanks
+            {props.saveResponseError ? "Error" : "Thanks"}
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h6" gutterBottom>
-            Data was successfully saved
+            {props.saveResponseError
+              ? "An error has occurred"
+              : "Your details have been successfully Saved!"}
           </Typography>
         </Grid>
       </Grid>

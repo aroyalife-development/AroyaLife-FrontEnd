@@ -31,7 +31,8 @@ class ProviderSignup extends Component {
       accName: "",
       email: "",
       password: "",
-      specializationList: []
+      specializationList: [],
+      saveStatusError: false
     };
   }
 
@@ -45,6 +46,12 @@ class ProviderSignup extends Component {
     });
   };
 
+  updateSaveStatusError = value => {
+    this.setState({
+      saveStatusError: value
+    });
+  };
+
   componentDidMount() {
     axios
       .get(environment.baseUrl + "specialization")
@@ -52,11 +59,9 @@ class ProviderSignup extends Component {
         this.setState({
           specializationList: response.data.content
         });
-        // return response;
       })
       .catch(error => {
         console.log("------------------- error - ", error);
-        // return error;
       });
   }
 
@@ -92,6 +97,7 @@ class ProviderSignup extends Component {
                 <ProviderSignupStepper
                   providerState={this.state}
                   updateState={this.updateState}
+                  updateSaveStatusError={this.updateSaveStatusError}
                 />
               </CardBody>
             </Card>

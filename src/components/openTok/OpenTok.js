@@ -22,66 +22,13 @@ import {
 } from "reactstrap";
 import config from "./config.json";
 import "./App.css";
+import axios from "axios";
+import { environment } from "../../environments.js";
 
 let callState = false;
 let otCore;
 
-const otCoreOptions = {
-  credentials: {
-    apiKey: config.apiKey,
-    sessionId: config.sessionId,
-    token: config.token
-  },
-  // A container can either be a query selector or an HTML Element
-  streamContainers(pubSub, type, data, stream) {
-    return {
-      publisher: {
-        camera: "#cameraPublisherContainer",
-        screen: "#screenPublisherContainer"
-      },
-      subscriber: {
-        camera: "#cameraSubscriberContainer",
-        screen: "#screenSubscriberContainer"
-      }
-    }[pubSub][type];
-  },
-  controlsContainer: "#controls",
-  packages: ["textChat"],
-  // packages: ['textChat', 'screenSharing', 'annotation'],
-  communication: {
-    callProperties: null // Using default
-  },
-  textChat: {
-    name: ["David", "Paul", "Emma", "George", "Amanda"][
-      (Math.random() * 5) | 0
-    ], // eslint-disable-line no-bitwise
-    waitingMessage: "Messages will be delivered when other users arrive",
-    container: "#chat"
-  },
-  screenSharing: {
-    extensionID: "plocfffmbcclpdifaikiikgplfnepkpo",
-    annotation: true,
-    externalWindow: false,
-    dev: true,
-    screenProperties: {
-      insertMode: "append",
-      width: "100%",
-      height: "100%",
-      showControls: false,
-      style: {
-        buttonDisplayMode: "off"
-      },
-      videoSource: "window",
-      fitMode: "contain" // Using default
-    }
-  },
-  annotation: {
-    absoluteParent: {
-      publisher: ".openTok-video-container",
-      subscriber: ".openTok-video-container"
-    }
-  }
-};
+let userType;
 
 /**
  * Build classes for container elements based on state
@@ -151,16 +98,7 @@ const startCallMask = start => (
   </div>
 );
 
-// const answerCallMask = start => (
-//   <div className="openTok-mask">
-//     <button className="message button clickable" onClick={start}>
-//       Answer The Call
-//     </button>
-//   </div>
-// );
-
 class OpenTok extends Component {
-  
   constructor(props) {
     super(props);
     console.log("-------------------------------------------- constructor");
@@ -177,31 +115,165 @@ class OpenTok extends Component {
     this.endCall = this.endCall.bind(this);
     this.toggleLocalAudio = this.toggleLocalAudio.bind(this);
     this.toggleLocalVideo = this.toggleLocalVideo.bind(this);
+
+    this.credentials = null;
+
+    this.currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    this.userType = null;
+    if (this.currentUser) {
+      this.userType = this.currentUser.role.name;
+    }
+    this.userCallType = "SENDER";
+    this.socket = window.socket;
   }
 
   componentWillMount() {
     console.log("-------------------------------------------- Will Mount");
-    otCore = window.otCore;
-    this.setState({ connected: true });
-    console.log(otCore);
+    // this.setState({ connected: true });
   }
 
-  // static getDerivedStateFromProps(props, state){
-  //   console.log("-------------------------------------------- DerivedStateFromProps");
-  //   return false;
-  // }
-
-  componentDidMount() {
+  async componentDidMount() {
     console.log("-------------------------------------------- Did Mount");
+
+    this.credentials = JSON.parse(localStorage.getItem("credentials"));
+    console.log(this.credentials);
+
+    let currentAppointment = JSON.parse(
+      localStorage.getItem("currentAppointment")
+    );
+
+    if (
+      this.credentials &&
+      this.credentials.sessionId &&
+      currentAppointment &&
+      currentAppointment.id
+    ) {
+      if (this.userType === "Patient") {
+        console.log("Patient");
+      } else if (this.userType === "Provider") {
+        console.log("PROVIDER");
+      }
+
+      await axios
+        .get(environment.baseUrl + "appointment/" + currentAppointment.id)
+        .then(response => {
+          currentAppointment = response.data.content;
+
+          localStorage.setItem(
+            "currentAppointment",
+            JSON.stringify(currentAppointment)
+          );
+
+          if (this.credentials.token && this.credentials.apiKey) {
+            this.userCallType = "RECEIVER";
+            console.log("this.userCallType - ", this.userCallType);
+
+            this.createOpenTokConnection();
+          } else {
+            axios
+              .post(environment.baseUrl + "appointment/initCall", {
+                sender: {
+                  id: currentAppointment.patient.user.id
+                },
+                receiver: {
+                  id: currentAppointment.provider.user.id
+                },
+                appointment: {
+                  id: currentAppointment.id,
+                  sessionId: this.credentials.sessionId
+                },
+                connData: {
+                  role: "publisher",
+                  metaData: "name=test01"
+                }
+              })
+              .then(response => {
+                console.log("before emit start call!");
+                console.log("response - ", response.data.content);
+
+                this.credentials.token = response.data.content.connectToken;
+                this.credentials.apiKey = response.data.content.apiKey;
+                this.userCallType = "SENDER";
+                console.log("this.userCallType - ", this.userCallType);
+                this.createOpenTokConnection();
+              })
+              .catch(error => {
+                console.log("------------------- error - ", error);
+              });
+          }
+        })
+        .catch(error => {
+          console.log("------------------- error - ", error);
+        });
+    } else {
+      console.log("NO CREDENTIALS or currentAppointment");
+      let path = "appointments";
+      this.props.history.push(path);
+      setTimeout(() => this.props.history.push(path), 3000);
+    }
+  }
+
+  createOpenTokConnection() {
+    console.log("------------------- this.credentials - ", this.credentials);
+    const otCoreOptions = {
+      credentials: {
+        apiKey: this.credentials.apiKey,
+        sessionId: this.credentials.sessionId,
+        token: this.credentials.token
+      },
+      // A container can either be a query selector or an HTML Element
+      streamContainers(pubSub, type, data, stream) {
+        return {
+          publisher: {
+            camera: "#cameraPublisherContainer",
+            screen: "#screenPublisherContainer"
+          },
+          subscriber: {
+            camera: "#cameraSubscriberContainer",
+            screen: "#screenSubscriberContainer"
+          }
+        }[pubSub][type];
+      },
+      controlsContainer: "#controls",
+      packages: [],
+      // packages: ['textChat', 'screenSharing', 'annotation'],
+      communication: {
+        callProperties: null // Using default
+      },
+      textChat: {},
+      screenSharing: {
+        extensionID: "plocfffmbcclpdifaikiikgplfnepkpo",
+        annotation: true,
+        externalWindow: false,
+        dev: true,
+        screenProperties: {
+          insertMode: "append",
+          width: "100%",
+          height: "100%",
+          showControls: false,
+          style: {
+            buttonDisplayMode: "off"
+          },
+          videoSource: "window",
+          fitMode: "contain" // Using default
+        }
+      },
+      annotation: {
+        absoluteParent: {
+          publisher: ".openTok-video-container",
+          subscriber: ".openTok-video-container"
+        }
+      }
+    };
+
     otCore = new AccCore(otCoreOptions);
     otCore
       .connect()
-      .then(() => this.setState({ connected: true }))
+      .then(
+        // () => this.setState({ connected: true })
+        )
       .catch(error => console.log(error));
-
-
-    // otCore = window.otCore;
-    // this.setState({ connected: true });
 
     const events = [
       "archiveStarted",
@@ -265,7 +337,6 @@ class OpenTok extends Component {
 
     events.forEach(eventName =>
       otCore.on(eventName, ({ publishers, subscribers, meta }) => {
-        // this.setState({ publishers, subscribers, meta });
         console.log({ publishers, subscribers, meta });
         console.log(this.state);
 
@@ -281,6 +352,7 @@ class OpenTok extends Component {
             break;
           case "connectionCreated":
             console.log(eventName + " - " + i);
+            this.setState({ connected: true })
             i++;
             break;
           case "connectionDestroyed":
@@ -428,105 +500,78 @@ class OpenTok extends Component {
             i++;
             break;
 
-          // annotation
-          case "startAnnotation":
-            console.log(eventName + " - " + i);
-            i++;
-            break;
-          case "linkAnnotation":
-            console.log(eventName + " - " + i);
-            i++;
-            break;
-          case "resizeCanvas":
-            console.log(eventName + " - " + i);
-            i++;
-            break;
-          case "annotationWindowClosed":
-            console.log(eventName + " - " + i);
-            i++;
-            break;
-          case "endAnnotation":
-            console.log(eventName + " - " + i);
-            i++;
-            break;
-
-          // archiving
-          case "startArchive":
-            console.log(eventName + " - " + i);
-            i++;
-            break;
-          case "stopArchive":
-            console.log(eventName + " - " + i);
-            i++;
-            break;
-          case "archiveReady":
-            console.log(eventName + " - " + i);
-            i++;
-            break;
-          case "archiveError":
-            console.log(eventName + " - " + i);
-            i++;
-            break;
-
           default:
             break;
         }
       })
     );
+
     otCore.on("endCall", event => {
       console.log(event);
       console.log(this.state);
       console.log("endCall" + " - " + i);
       i++;
     });
-    otCore.on("signal", event => {
 
+    otCore.on("signal", event => {
       console.log(event);
       console.log(this.state);
       console.log("signal" + " - " + i);
       console.log("JSON.parse(event).data", JSON.parse(event.data));
 
-      if (callState && JSON.parse(event.data) === "endCall") {
-        this.endCall();
-      } else if (!callState && JSON.parse(event.data) === "startCall") {
-        this.startCall();
-      }
+      // if (callState && JSON.parse(event.data) === "endCall") {
+      //   // this.endCall();
+      // } else if (!callState && JSON.parse(event.data) === "startCall") {
+      //   this.startCall();
+      // }
       i++;
-
     });
   }
 
-  
+  // shouldComponentUpdate() {
+  //   console.log(
+  //     "-------------------------------------------- Should Component Update"
+  //   );
+  //   return true;
+  // }
 
-  shouldComponentUpdate() {
-    console.log(
-      "-------------------------------------------- Should Component Update"
-    );
-    return true;
-  }
+  // componentDidUpdate() {
+  //   console.log(
+  //     "-------------------------------------------- Should Component Update"
+  //   );
+  // }
 
-  componentDidUpdate() {
-    console.log(
-      "-------------------------------------------- Should Component Update"
-    );
-  }
-
-  componentWillUnmount() {
-    console.log("-------------------------------------------- Will Unmount");
-    this.endCall();
-  }
+  // componentWillUnmount() {
+  //   console.log("-------------------------------------------- Will Unmount");
+  //   this.endCall();
+  // }
 
   startCall() {
     console.log("In Start Call");
     console.log("callState", callState);
+
+    const currentAppointment = JSON.parse(
+      localStorage.getItem("currentAppointment")
+    );
+
     if (!callState) {
       callState = true;
+      this.props.changeCallStatus(callState);
       otCore
         .startCall()
         .then(({ publishers, subscribers, meta }) => {
           this.setState({ publishers, subscribers, meta, active: true });
         })
         .catch(error => console.log(error));
+      if (this.userCallType === "SENDER") {
+        this.socket.emit("startCall", {
+          id: this.socket.id,
+          appointment: { id: currentAppointment.id },
+          sender: currentAppointment.patient.user.id,
+          receiver: currentAppointment.provider.user.id,
+          credentials: this.credentials
+        });
+      }
     }
   }
 
@@ -535,10 +580,10 @@ class OpenTok extends Component {
     console.log("callState", callState);
     if (callState) {
       console.log("InSide");
-      window.callStatus = undefined;
       callState = false;
-      this.setState({ active: false });
+      this.props.changeCallStatus(callState);
       otCore.endCall();
+      this.setState({ active: false });
     }
   }
 
@@ -567,10 +612,11 @@ class OpenTok extends Component {
       screenSubscriberClass
     } = containerClasses(this.state);
 
-    console.log("--------------------- 12 - ", window.connected);
-    console.log("--------------------- 12 - ", window.otCore);
-    console.log("--------------------- 12 - ", this.state);
-    console.log("--------------------- 12 - ", connected);
+    // console.log("--------------------- 12 - ", window.connected);
+    // console.log("--------------------- 12 - ", window.otCore);
+    // console.log("--------------------- 12 - ", this.state);
+    // console.log("--------------------- 12 - ", connected);
+    // console.log("--------------------- 12 - ", active);
 
     return (
       <div className="openTok">

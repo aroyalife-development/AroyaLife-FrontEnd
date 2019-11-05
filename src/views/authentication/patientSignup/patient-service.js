@@ -15,7 +15,7 @@ import { environment } from "../../../environments";
 // };
 
 export const save = body => {
-  axios
+  return axios
     .post(environment.baseUrl + "patient", {
       name: body.name,
       surname: body.surname,
@@ -25,9 +25,27 @@ export const save = body => {
       user: {
         accName: body.accName,
         email: body.email,
-        password: body.password,
-        role: { id: "d36eeebd8b1f0cde16210339e97b9408" }
+        password: body.password
+      },
+      subscription: {
+        id: "faa6643aca8c5318a9583178795542cf"
       }
+    })
+    .then(response => {
+      console.log("------------------- response - ", response);
+      return response;
+    })
+    .catch(error => {
+      console.log("------------------- error - ", error);
+      return error;
+    });
+};
+
+export const login = async body => {
+  return axios
+    .post(environment.baseUrl + "platform-users/login", {
+      username: body.username,
+      password: body.password
     })
     .then(response => {
       console.log("------------------- response - ", response);

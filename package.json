@@ -41,6 +41,7 @@
     "chart.js": "2.7.2",
     "chroma-js": "^1.4.1",
     "date-fns": "^2.0.0-beta.5",
+    "express": "^4.17.1",
     "firebase": "^5.7.2",
     "history": "4.7.2",
     "immutability-helper": "2.7.1",
@@ -88,8 +89,8 @@
     "reactstrap": "^7.1.0",
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
-    "validator": "^10.10.0",
-    "socket.io": "*",
-    "express": "*"
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "validator": "^10.10.0"
   }
 }
