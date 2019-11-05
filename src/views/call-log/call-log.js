@@ -56,7 +56,7 @@ class callLog extends React.Component {
               round="true"
               icon="true"
             >
-              <i className="fa fa-edit" />
+              <i className="fa fa-folder-open" />
             </Button>
             {/* use this button to remove the data row */}
             {/* <Button
