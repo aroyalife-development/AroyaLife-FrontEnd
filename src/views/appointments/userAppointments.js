@@ -33,6 +33,7 @@ class UserAppointments extends React.Component {
       modal: false,
       search: false,
       obj: {},
+      appointments: [],
       jsonData: [
         {
           id: "9d0fe08395fbd9add6cfb1b66505fbf9",
@@ -94,8 +95,6 @@ class UserAppointments extends React.Component {
       this.userId = currentUser.id;
       console.log(this.userId);
     }
-
-    this.appointments = [];
   }
 
   toggle() {
@@ -112,8 +111,8 @@ class UserAppointments extends React.Component {
     setTimeout(() => this.setState(this.props.history.push(path)), 3000);
   };
 
-  componentDidMount() {
-    axios
+  async componentDidMount() {
+    await axios
       .get(environment.baseUrl + "specialization")
       .then(response => {
         console.log(
@@ -129,12 +128,12 @@ class UserAppointments extends React.Component {
         console.log("------------------- error - ", error);
       });
 
-    axios
+    await axios
       .get(environment.baseUrl + "appointment")
       .then(response => {
         console.log("------------------- response - ", response);
-        this.appointments = response.data.content;
-        console.log("------------------- appointments - ", this.appointments);
+        this.setState({ appointments: response.data.content });
+        // console.log("------------------- appointments - ", this.appointments);
       })
       .catch(error => {
         console.log("------------------- error - ", error);
@@ -142,7 +141,7 @@ class UserAppointments extends React.Component {
   }
 
   render() {
-    const data = this.state.jsonData.map((prop, key) => {
+    const data = this.state.appointments.map((prop, key) => {
       return {
         id: key,
         dateTime: prop.appointDateTime,
