@@ -62,6 +62,7 @@ class AppointmentDet extends React.Component {
       ],
       userType: 1
     };
+    this.appointment = [];
     console.log(this.props.location.state.id);
   }
 
@@ -72,10 +73,24 @@ class AppointmentDet extends React.Component {
       });
     }
   }
+
   togglereco() {
     this.setState({
       modal: !this.state.modal
     });
+  }
+
+  componentDidMount() {
+    // axios
+    //   .get(environment.baseUrl + "appointment/" + this.appointmentId)
+    //   .then(response => {
+    //     console.log("------------------- response - ", response);
+    //     this.appointment = response.data.content;
+    //     console.log("------------------- appointment - ", this.appointment);
+    //   })
+    //   .catch(error => {
+    //     console.log("------------------- error - ", error);
+    //   });
   }
 
   render() {

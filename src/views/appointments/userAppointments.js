@@ -24,7 +24,6 @@ import "react-table/react-table.css";
 import provider from "../../assets/images/provider-image/provider-catagory.jpg";
 import providergif from "../../assets/images/provider-image/provider-search.gif";
 import data from "./data.js";
-import providergif from "../../assets/images/provider-image/animat-search-color.gif";
 import axios from "axios";
 import { environment } from "../../environments";
 import moment from "moment";
@@ -85,8 +84,6 @@ class UserAppointments extends React.Component {
       ]
     };
 
-
-
     this.toggle = this.toggle.bind(this);
     this.handleCategory = this.handleCategory.bind(this);
     this.credentials = {
@@ -102,15 +99,9 @@ class UserAppointments extends React.Component {
       this.userId = currentUser.id;
       console.log(this.userId);
     }
-  }
 
-  // componentDidMount() {
-  //   axios.get('http://localhost:3001/api/v1/lists.json')
-  //   .then(response => {
-  //     console.log(response.data);
-  //     this.setState({lists: response.data})
-  //   })
-  // }
+    this.appointments = [];
+  }
 
   toggle() {
     this.setState({
@@ -197,6 +188,17 @@ class UserAppointments extends React.Component {
           specializationList: response.data.content,
           specialization: response.data.content[0].id
         });
+      })
+      .catch(error => {
+        console.log("------------------- error - ", error);
+      });
+
+    axios
+      .get(environment.baseUrl + "appointment")
+      .then(response => {
+        console.log("------------------- response - ", response);
+        this.appointments = response.data.content;
+        console.log("------------------- appointments - ", this.appointments);
       })
       .catch(error => {
         console.log("------------------- error - ", error);
