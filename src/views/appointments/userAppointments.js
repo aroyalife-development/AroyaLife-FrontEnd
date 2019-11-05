@@ -23,18 +23,72 @@ import {
 import "react-table/react-table.css";
 import provider from "../../assets/images/provider-image/provider-catagory.jpg";
 import providergif from "../../assets/images/provider-image/provider-search.gif";
+import data from "./data.js";
 
 class UserAppointments extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
-      search: false
+      search: false,
+      obj: {},
+      jsonData: [
+        {
+          id: "9d0fe08395fbd9add6cfb1b66505fbf9",
+          patient: {
+            id: "faa6643aca8c5318a9583178795542cf",
+            user: {
+              id: "faa6643aca8c5318a9583178795542cf",
+              accName: "Buddhi",
+              type: "type1"
+            }
+          },
+          provider: {
+            id: "faa6643aca8c5318a9583178795542cf",
+            user: {
+              id: "39e48f3f7bd8d5c2372533bc24f182b7",
+              accName: "Rashmi",
+              type: "type2"
+            }
+          },
+          status: "ongoing",
+          appointDateTime: "2019-10-28"
+        },
+        {
+          id: "432dfd29c36d70028141a473d246aeb9",
+          patient: {
+            id: "faa6643aca8c5318a9583178795542cf",
+            user: {
+              id: "faa6643aca8c5318a9583178795542cf",
+              accName: "Buddhi",
+              type: "type3"
+            }
+          },
+          provider: {
+            id: "faa6643aca8c5318a9583178795542cf",
+            user: {
+              id: "39e48f3f7bd8d5c2372533bc24f182b7",
+              accName: "Rashmi",
+              type: "type4"
+            }
+          },
+          status: "done",
+          appointDateTime: "2019-10-29"
+        }
+      ]
     };
 
     this.toggle = this.toggle.bind(this);
     this.handleCategory = this.handleCategory.bind(this);
   }
+
+  // componentDidMount() {
+  //   axios.get('http://localhost:3001/api/v1/lists.json')
+  //   .then(response => {
+  //     console.log(response.data);
+  //     this.setState({lists: response.data})
+  //   })
+  // }
 
   toggle() {
     this.setState({
@@ -51,6 +105,64 @@ class UserAppointments extends React.Component {
   };
 
   render() {
+    const data = this.state.jsonData.map((prop, key) => {
+      return {
+        id: key,
+        dateTime: prop.appointDateTime,
+        name: prop.patient.user.accName,
+        type: prop.patient.user.type,
+        status: prop.status,
+        actions: (
+          // we've added some custom button actions
+          <div className="text-center">
+            {/* use this button to add a edit kind of action */}
+            <Button
+              onClick={() => {
+                let obj = data.find(o => o.id === key);
+                // this.setState({
+                //   modal: !this.state.modal,
+                //   obj: obj
+                // });
+                let path = `appointmentDetails`;
+                this.props.history.push({
+                  pathname: path,
+                  state: { id: obj.id }
+                });
+              }}
+              color="inverse"
+              size="sm"
+              round="true"
+              icon="true"
+            >
+              <i className="fa fa-edit" />
+            </Button>
+            {/* use this button to remove the data row */}
+            {/* <Button
+              onClick={() => {
+                let newdata = data2;
+                newdata.find((o, i) => {
+                  if (o.id === key) {
+                    newdata.splice(i, 1);
+                    console.log(newdata);
+                    return true;
+                  }
+                  return false;
+                });
+                this.setState({ jsonData: newdata });
+              }}
+              className="ml-1"
+              color="danger"
+              size="sm"
+              round="true"
+              icon="true"
+            >
+              <i className="fa fa-times" />
+            </Button> */}
+          </div>
+        )
+      };
+    });
+
     return (
       <Card>
         <CardTitle className="mb-0 p-3 border-bottom bg-light">
@@ -70,32 +182,20 @@ class UserAppointments extends React.Component {
           <ReactTable
             columns={[
               {
-                Header: "Date",
-                accessor: "date"
+                Header: "Appointment Date and Time",
+                accessor: "dateTime"
               },
               {
-                Header: "Time",
-                accessor: "time"
+                Header: "Name",
+                accessor: "name"
               },
               {
-                Header: "Duration",
-                accessor: "duration"
+                Header: "Type",
+                accessor: "type"
               },
               {
-                Header: "Provider Name",
-                accessor: "providerName"
-              },
-              {
-                Header: "Call Status",
-                accessor: "callStatus"
-              },
-              {
-                Header: "Diognosis Link",
-                accessor: "diognosis"
-              },
-              {
-                Header: "Recommendation Link",
-                accessor: "ecommendationLink"
+                Header: "Status",
+                accessor: "status"
               },
               {
                 Header: "Actions",
@@ -108,6 +208,7 @@ class UserAppointments extends React.Component {
             showPaginationBottom={true}
             className="-striped -highlight"
             filterable
+            data={data}
           />
         </CardBody>
         <Modal

@@ -108,18 +108,7 @@ import videoCall from "../views/video-call/videoCall";
 /*                               Appointment                                      */
 /*--------------------------------------------------------------------------------*/
 import appointments from "../views/appointments/userAppointments";
-/*--------------------------------------------------------------------------------*/
-/*                               Patients                                         */
-/*--------------------------------------------------------------------------------*/
-import patients from "../views/patients/patients";
-/*--------------------------------------------------------------------------------*/
-/*                               Recommendation cards                             */
-/*--------------------------------------------------------------------------------*/
-import recommendationCards from "../views/recommendationCards/recommendationCards";
-/*--------------------------------------------------------------------------------*/
-/*                               Call Log                             */
-/*--------------------------------------------------------------------------------*/
-import callLog from "../views/call-log/call-log";
+import appointmentsDet from "../views/appointments/appointmentDetail";
 
 var auths = [].concat(AuthRoutes);
 
@@ -643,22 +632,11 @@ var ThemeRoutes = [
     component: appointments
   },
   {
-    path: "/patients",
-    name: "Patients",
-    icon: "mdi mdi-account-outline",
-    component: patients
-  },
-  {
-    path: "/recommendationCards",
-    name: "Recommendation",
-    icon: "mdi mdi-cards-outline",
-    component: recommendationCards
-  },
-  {
-    path: "/callLog",
-    name: "Call Log",
-    icon: "mdi mdi-phone-log",
-    component: callLog
+    path: "/appointmentDetails",
+    hide: true,
+    name: "Appointments Details",
+    icon: "mdi mdi-calendar-clock",
+    component: appointmentsDet
   }
 ];
 export default ThemeRoutes;
