@@ -8,432 +8,122 @@ import userimg from "./assets/images/users/7.jpg";
 import AccCore from "opentok-accelerator-core";
 import config from "./components/openTok/config.json";
 import "./views/video-call/videoCall.css";
-
 import { Modal, ModalBody, Button } from "reactstrap";
 
-let otCore;
-let callState = false;
-let onlineStatus = 0;
+import socketIOClient from "socket.io-client";
+import axios from "axios";
 
-const otCoreOptions = {
-  credentials: {
-    apiKey: config.apiKey,
-    sessionId: config.sessionId,
-    token: config.token
-  },
-  // A container can either be a query selector or an HTML Element
-  streamContainers(pubSub, type, data, stream) {
-    return {
-      publisher: {
-        camera: "#cameraPublisherContainer",
-        screen: "#screenPublisherContainer"
-      },
-      subscriber: {
-        camera: "#cameraSubscriberContainer",
-        screen: "#screenSubscriberContainer"
-      }
-    }[pubSub][type];
-  },
-  controlsContainer: "#controls",
-  packages: [],
-  // packages: ['textChat', 'screenSharing', 'annotation'],
-  communication: {
-    callProperties: null // Using default
-  },
-  textChat: {
-    name: ["David", "Paul", "Emma", "George", "Amanda"][
-      (Math.random() * 5) | 0
-    ], // eslint-disable-line no-bitwise
-    waitingMessage: "Messages will be delivered when other users arrive",
-    container: "#chat"
-  },
-  screenSharing: {
-    extensionID: "plocfffmbcclpdifaikiikgplfnepkpo",
-    annotation: true,
-    externalWindow: false,
-    dev: true,
-    screenProperties: {
-      insertMode: "append",
-      width: "100%",
-      height: "100%",
-      showControls: false,
-      style: {
-        buttonDisplayMode: "off"
-      },
-      videoSource: "window",
-      fitMode: "contain" // Using default
-    }
-  },
-  annotation: {
-    absoluteParent: {
-      publisher: ".openTok-video-container",
-      subscriber: ".openTok-video-container"
-    }
-  }
-};
+// Add a request interceptor
+// axios.interceptors.request.use(function(config) {
+//   const token =
+//     "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiU1MiLCJRUyIsIlBTIiwiQVVTIl0sInVzZXJfdHlwZSI6IkFVIiwidXNlcl9pZCI6IjM5ZTQ4ZjNmN2JkOGQ1YzIzNzI1MzNiYzI0ZjE4MmI3IiwidXNlcl9uYW1lIjoiaGJoLmhhc2Fua2EuYnVkZGkuaGFzYW5rYUBnbWFpbC5jb20iLCJzY29wZSI6WyJBUCJdLCJleHAiOjE1NzIyNTk0MjcsImF1dGhvcml0aWVzIjpbImEtcyIsInAtYyIsIm9wYXNzLWMiLCJhLXYiLCJndCIsImYtdWkiLCJwci1zcyIsImEtYyIsInAtcyIsInAtdiIsIm9wcm9mLXUiLCJvcHJvZi12IiwicHItdiIsInUtdiJdLCJqdGkiOiIyOTIyZTI0NC0zZTNiLTRjNTQtYWRlYS00MzczZmU3NDZhYzkiLCJjbGllbnRfaWQiOiJDUEFQIn0.KvNZ6h9dkMLioCES3HrGqQnfpGQvLv_slxXoGkHo_cK_yqo1PnvhW0UZudnTiI-3bKxnXkh5_H3MIG5jzSFDo1Iu3EezufkNL4eNoiQks4JGnhxtm99hxqOTUS8hnuHC-YS_mYrIhKeTfRXFHEM2Lp119iJk_Fg4Y_loFxWc2xOT_-H1ptJfguzopB7DjzW-vw-DTHhidDWdvzIpAFPTL3YodrCyxJhDRtVYtbhMAkPNybOkBIVmFss_RuYCTZQ5cih2_vHm9FE0_EvkafyaoYbg_XLJ6EVGHYnpNmRiAOa7-iLzLrEyFr3cIzMudWfYT1CMCH9p9m-b-Iv3UUlEJA";
+//   config.headers.Authorization = token;
+//   return config;
+// });
+
+// axios.interceptors.request.use(
+//   config => {
+//     const token =
+//       "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiU1MiLCJRUyIsIlBTIiwiQVVTIl0sInVzZXJfdHlwZSI6IkFVIiwidXNlcl9pZCI6IjM5ZTQ4ZjNmN2JkOGQ1YzIzNzI1MzNiYzI0ZjE4MmI3IiwidXNlcl9uYW1lIjoiaGJoLmhhc2Fua2EuYnVkZGkuaGFzYW5rYUBnbWFpbC5jb20iLCJzY29wZSI6WyJBUCJdLCJleHAiOjE1NzIyNTk0MjcsImF1dGhvcml0aWVzIjpbImEtcyIsInAtYyIsIm9wYXNzLWMiLCJhLXYiLCJndCIsImYtdWkiLCJwci1zcyIsImEtYyIsInAtcyIsInAtdiIsIm9wcm9mLXUiLCJvcHJvZi12IiwicHItdiIsInUtdiJdLCJqdGkiOiIyOTIyZTI0NC0zZTNiLTRjNTQtYWRlYS00MzczZmU3NDZhYzkiLCJjbGllbnRfaWQiOiJDUEFQIn0.KvNZ6h9dkMLioCES3HrGqQnfpGQvLv_slxXoGkHo_cK_yqo1PnvhW0UZudnTiI-3bKxnXkh5_H3MIG5jzSFDo1Iu3EezufkNL4eNoiQks4JGnhxtm99hxqOTUS8hnuHC-YS_mYrIhKeTfRXFHEM2Lp119iJk_Fg4Y_loFxWc2xOT_-H1ptJfguzopB7DjzW-vw-DTHhidDWdvzIpAFPTL3YodrCyxJhDRtVYtbhMAkPNybOkBIVmFss_RuYCTZQ5cih2_vHm9FE0_EvkafyaoYbg_XLJ6EVGHYnpNmRiAOa7-iLzLrEyFr3cIzMudWfYT1CMCH9p9m-b-Iv3UUlEJA";
+//     if (token) {
+//       config.headers["Authorization"] = "Bearer " + token;
+//     }
+//     config.headers['Content-Type'] = 'application/json';
+//     return config;
+//   },
+//   error => {
+//     Promise.reject(error);
+//   }
+// );
 
 class App extends Component {
   constructor(props) {
     super(props);
-    // this.toggleCallRingModal = this.toggleCallRingModal.bind(this);
-    // this.endCall = this.endCall.bind(this);
-    // this.answerCall = this.answerCall.bind(this);
-    // this.state = { collapse: false, modal: false };
+    this.toggleCallRingModal = this.toggleCallRingModal.bind(this);
+    this.endCall = this.endCall.bind(this);
+    this.answerCall = this.answerCall.bind(this);
+    this.state = { collapse: false, modal: false };
+    this.state = {
+      endpoint: "localhost:4001",
+      ///
+      color: "white"
+      ///
+    };
+    this.socket = window.socket = socketIOClient(this.state.endpoint);
+    this.currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (this.currentUser) {
+      this.socket.emit("initUser", {
+        id: this.socket.id,
+        user: this.currentUser
+      });
+    }
+    console.log("INIT - ", socket.id);
   }
 
-  // toggleCallRingModal() {
-  //   this.setState({
-  //     modal: !this.state.modal
-  //   });
-  // }
+  componentDidMount() {
+    this.socket.on("test01", col => {
+      console.log("TEST01 - ", col);
+    });
+    this.socket.on("test02", col => {
+      console.log("TEST02 - ", col);
+    });
 
-  // answerCall() {
-  //   if (this.state.modal) {
-  //     otCore
-  //       .signal("callStatus", "startCall")
-  //       .then(() => {
-  //         console.log("startCall......");
-  //       })
-  //       .catch(error => console.log(error));
-  //   }
-  //   this.toggleCallRingModal();
-  //   // props.history.push("/videoCall")
-  // }
+    this.socket.on("startCall", data => {
+      this.currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      if (this.currentUser && this.currentUser.id === data.receiver) {
+        localStorage.setItem(
+          "currentAppointment",
+          JSON.stringify(data.appointment)
+        );
+        localStorage.setItem("credentials", JSON.stringify(data.credentials));
+        this.toggleCallRingModal();
+      }
+    });
 
-  // endCall() {
-  //   if (this.state.modal) {
-  //     otCore
-  //       .signal("callStatus", "endCall")
-  //       .then(() => {
-  //         console.log("endCall......");
-  //       })
-  //       .catch(error => console.log(error));
-  //   }
-  //   this.toggleCallRingModal();
-  // }
+    this.socket.on("endCall", data => {
 
-  // componentDidUpdate(){
-  //   console.log('-------------------------------------- componentDidUpdate - app');
-  // }
+      this.currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      let currentAppointment = JSON.parse(localStorage.getItem("currentAppointment"));
 
-  // componentWillMount() {
-  //   otCore = new AccCore(otCoreOptions);
-  //   otCore
-  //     .connect()
-  //     .then()
-  //     .catch(error => console.log(error));
-  //   window.otCore = otCore;
+      console.log("endCall - ", data);
+      console.log("this.currentUser - ", this.currentUser);
+      console.log("currentAppointment  - ", currentAppointment );
 
-  //   const events = [
-  //     "archiveStarted",
-  //     "archiveStopped",
-  //     "connectionCreated",
-  //     "connectionDestroyed",
-  //     "sessionConnected",
-  //     "sessionDisconnected",
-  //     "sessionReconnected",
-  //     "sessionReconnecting",
-  //     "signal",
-  //     "streamCreated",
-  //     "streamDestroyed",
-  //     // "streamPropertyChanged",
 
-  //     "connected",
-  //     "startScreenShare",
-  //     "endScreenShare",
-  //     "error",
+      if (this.currentUser && currentAppointment) {
+        if (
+          (this.currentUser.id === data.receiver ||
+            this.currentUser.id === data.sender) &&
+          currentAppointment.id === data.appointment
+        ) {
+          console.log("IN APP END CALL");
+          
+          localStorage.removeItem("currentAppointment");
+          localStorage.removeItem("credentials");
+          // let path = "appointments";
+          // this.props.history.push(path);
+          // setTimeout(() => this.props.history.push(path), 3000);
+          window.location = "/appointments"
+        }
+      }
+    });
+  }
 
-  //     "startCall",
-  //     // "endCall",
-  //     "callPropertyChanged",
-  //     "subscribeToCamera",
-  //     "subscribeToScreen",
-  //     "subscribeToSip",
-  //     "unsubscribeFromCamera",
-  //     "unsubscribeFromSip",
-  //     "unsubscribeFromScreen",
-  //     "startViewingSharedScreen",
-  //     "endViewingSharedScreen",
+  toggleCallRingModal() {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
 
-  //     // "showTextChat",
-  //     // "hideTextChat",
-  //     "messageSent",
-  //     "errorSendingMessage",
-  //     "messageReceived",
+  answerCall() {
+    this.toggleCallRingModal();
+    // props.history.push("/videoCall");
+  }
 
-  //     "startScreenSharing",
-  //     "endScreenSharing",
-  //     "screenSharingError",
-
-  //     "startAnnotation",
-  //     "linkAnnotation",
-  //     "resizeCanvas",
-  //     "annotationWindowClosed",
-  //     "endAnnotation",
-
-  //     "startArchive",
-  //     "stopArchive",
-  //     "archiveReady",
-  //     "archiveError"
-  //   ];
-
-  //   // events.forEach(event => otCore.on(event, ({ publishers, subscribers, meta }) => {
-  //   //   this.setState({ publishers, subscribers, meta });
-  //   //   console.log(event);
-  //   // }));
-
-  //   let i = 0;
-
-  //   events.forEach(eventName =>
-  //     otCore.on(eventName, ({ publishers, subscribers, meta }) => {
-  //       // this.setState({ publishers, subscribers, meta });
-  //       console.log({ publishers, subscribers, meta });
-  //       console.log(this.state);
-
-  //       switch (eventName) {
-  //         // ---------------------- Session Events ----------------------
-  //         case "archiveStarted":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "archiveStopped":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "connectionCreated":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           onlineStatus++;
-  //           if(onlineStatus === 2){
-  //             console.log('onlineStatus ------------ ONLINE');
-  //           } else {
-  //             console.log('onlineStatus ------------ OFFLINE');
-  //           }
-  //           i++;
-  //           break;
-  //         case "connectionDestroyed":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           onlineStatus--;
-  //           console.log('onlineStatus ------------ OFFLINE');
-  //           i++;
-  //           break;
-  //         case "sessionConnected":
-  //           otCore.se;
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "sessionDisconnected":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "sessionReconnected":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "sessionReconnecting":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "signal":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "streamCreated":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           console.log("callState - ", callState);
-
-  //           if (!callState) {
-  //             this.toggleCallRingModal();
-  //           }
-  //           i++;
-  //           break;
-  //         case "streamDestroyed":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           if (this.state.modal) {
-  //             this.toggleCallRingModal();
-  //             callState = false;
-  //           }
-  //           i++;
-  //           break;
-  //         case "streamPropertyChanged":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-
-  //         // ------------------------ Core Events -----------------------
-  //         case "connected":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "startScreenShare":
-  //           this.setState({ publishers, subscribers, meta });
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "endScreenShare":
-  //           this.setState({ publishers, subscribers, meta });
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "error":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-
-  //         // -------------------- Communication Events ------------------
-  //         case "startCall":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         // case "endCall":
-  //         //   console.log(eventName + " - " + i + " app - " + i);
-  //         //   i++;
-  //         //   break;
-  //         case "callPropertyChanged":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "subscribeToCamera":
-  //           this.setState({ publishers, subscribers, meta });
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "subscribeToScreen":
-  //           this.setState({ publishers, subscribers, meta });
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "subscribeToSip":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "unsubscribeFromCamera":
-  //           this.setState({ publishers, subscribers, meta });
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "unsubscribeFromSip":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "unsubscribeFromScreen":
-  //           this.setState({ publishers, subscribers, meta });
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "startViewingSharedScreen":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "endViewingSharedScreen":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-
-  //         // ----------------------- TextChat Events --------------------
-  //         // case "showTextChat":
-  //         //   console.log(eventName + " - " + i + " app - " + i);
-  //         //   i++;
-  //         //   break;
-  //         // case "hideTextChat":
-  //         //   console.log(eventName + " - " + i + " app - " + i);
-  //         //   i++;
-  //         //   break;
-  //         case "messageSent":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "errorSendingMessage":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "messageReceived":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-
-  //         // -------------------- ScreenSharing Events ------------------
-  //         // screenSharing
-  //         case "startScreenSharing":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "endScreenSharing":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "screenSharingError":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-
-  //         // annotation
-  //         case "startAnnotation":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "linkAnnotation":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "resizeCanvas":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "annotationWindowClosed":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "endAnnotation":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-
-  //         // archiving
-  //         case "startArchive":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "stopArchive":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "archiveReady":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-  //         case "archiveError":
-  //           console.log(eventName + " - " + i + " app - " + i);
-  //           i++;
-  //           break;
-
-  //         default:
-  //           break;
-  //       }
-  //     })
-  //   );
-  //   otCore.on("endCall", event => {
-  //     console.log(event);
-  //     console.log(this.state);
-  //     console.log("endCall - " + i + " app - " + i);
-  //     callState = false;
-  //     // console.log("window.callStatus", window.callStatus);
-  //     i++;
-  //   });
-  //   otCore.on("signal", event => {
-  //     console.log(event);
-  //     console.log(this.state);
-  //     console.log(this.state.modal);
-  //     console.log("signal - " + i + " app - " + i);
-
-  //     if (JSON.parse(event.data) === "endCall") {
-  //       callState = false;
-  //     } else if (JSON.parse(event.data) === "startCall") {
-  //       callState = true;
-  //     }
-
-  //     i++;
-  //   });
-  // }
+  endCall() {
+    this.toggleCallRingModal();
+    // NOTE : remove unnecessary objects.
+  }
 
   render() {
     return (
@@ -451,7 +141,8 @@ class App extends Component {
                 );
               })}
             </Switch>
-            {/* <Modal
+
+            <Modal
               isOpen={this.state.modal}
               toggle={this.toggleCallRingModal}
               className={this.props.className}
@@ -491,7 +182,7 @@ class App extends Component {
                   <br />
                 </div>
               </ModalBody>
-            </Modal> */}
+            </Modal>
           </div>
         </Router>
       </Provider>
@@ -500,16 +191,3 @@ class App extends Component {
 }
 
 export default App;
-
-{
-  /* <Link to="/videoCall">
-  <Button
-    color="success"
-    style={{ marginBottom: "1rem" }}
-    className="btn float-right"
-  >
-    <i className="mdi mdi-phone" />
-    <span className="ml-2">Make a Call</span>
-  </Button>
-</Link>; */
-}

@@ -5,7 +5,6 @@ import PatientSignupStepper from "./patientSignupStepper";
 
 import img2 from "../../../assets/images/big/Aroya_Life_subcription_Background-01.jpg";
 import logodarkicon from "../../../assets/images/login/AroyaLifeLogo.png";
-import { getUserRole } from "./patient-service";
 
 import axios from "axios";
 import { environment } from "../../../environments";
@@ -27,7 +26,8 @@ class PatientSignup extends Component {
       birthDay: "",
       accName: "",
       email: "",
-      password: ""
+      password: "",
+      saveStatusError: false
     };
   }
 
@@ -41,8 +41,13 @@ class PatientSignup extends Component {
     });
   };
 
-  componentDidMount() {
-  }
+  updateSaveStatusError = value => {
+    this.setState({
+      saveStatusError: value
+    });
+  };
+
+  componentDidMount() {}
 
   render() {
     return (
@@ -76,6 +81,7 @@ class PatientSignup extends Component {
                 <PatientSignupStepper
                   patientState={this.state}
                   updateState={this.updateState}
+                  updateSaveStatusError={this.updateSaveStatusError}
                 />
               </CardBody>
             </Card>

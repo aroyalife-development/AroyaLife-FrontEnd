@@ -1,19 +1,3 @@
-// import React, { Component } from "react";
-// import StepZilla from "react-stepzilla";
-// import {
-//   Card,
-//   CardBody,
-//   CardTitle,
-//   Navbar,
-//   NavbarBrand,
-//   Row
-// } from "reactstrap";
-
-// import Step1 from "./Step1";
-// import Step2 from "./Step2";
-// import Step3 from "./Step3";
-// import Step4 from "./Step4";
-
 import React from "react";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
@@ -32,6 +16,7 @@ import PersonalDetails from "./personalDetails";
 import AccountDetails from "./accountDetails";
 import ConfirmationMsg from "./confirmationMsg";
 import { save } from "./patient-service";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -113,11 +98,12 @@ const PatientSignupStepper = props => {
   const steps = getSteps();
 
   function handleNext() {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
-    // activeStep === steps.length - 1 ? alert("Finish") : alert("Next");
     if (activeStep === steps.length - 1) {
       savePatient();
+    } else {
+      setActiveStep(prevActiveStep => prevActiveStep + 1);
     }
+    // activeStep === steps.length - 1 ? alert("Finish") : alert("Next");
   }
 
   function handleBack() {
@@ -128,11 +114,12 @@ const PatientSignupStepper = props => {
     let response = await save(props.patientState);
     console.log(response);
     if (response.status === 201) {
-      alert("OK");
-      setActiveStep(prevActiveStep => prevActiveStep + 1);
+      // alert("OK");
+      // setActiveStep(prevActiveStep => prevActiveStep + 1);
     } else {
-      alert("Not Ok");
+      props.updateSaveStatusError(true);
     }
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
   }
 
   return (
@@ -149,8 +136,22 @@ const PatientSignupStepper = props => {
           {activeStep === steps.length ? (
             <div>
               <Container maxWidth="md">
-                <ConfirmationMsg classes={classes} />
+                <ConfirmationMsg
+                  classes={classes}
+                  saveResponseError={props.patientState.saveStatusError}
+                />
               </Container>
+              <div>
+                <Link to="/authentication/login">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={(classes.instructions, classes.floatRight)}
+                  >
+                    Login
+                  </Button>
+                </Link>
+              </div>
             </div>
           ) : (
             <div>

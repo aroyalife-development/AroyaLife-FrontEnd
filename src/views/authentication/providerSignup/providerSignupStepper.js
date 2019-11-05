@@ -16,6 +16,7 @@ import PersonalDetails from "./personalDetails";
 import AccountDetails from "./accountDetails";
 import ConfirmationMsg from "./confirmationMsg";
 import { save } from "./provider-service";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -97,7 +98,6 @@ const ProviderSignupStepper = props => {
   const steps = getSteps();
 
   function handleNext() {
-    // activeStep === steps.length - 1 ? alert("Finish") : alert("Next");
     if (activeStep === steps.length - 1) {
       saveProvider();
     } else {
@@ -112,13 +112,13 @@ const ProviderSignupStepper = props => {
   async function saveProvider() {
     let response = await save(props.providerState);
     console.log(response);
-
     if (response.status === 201) {
-      alert("OK");
-      setActiveStep(prevActiveStep => prevActiveStep + 1);
+      // alert("OK");
+      // setActiveStep(prevActiveStep => prevActiveStep + 1);
     } else {
-      alert("Not Ok");
+      props.updateSaveStatusError(true);
     }
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
   }
 
   return (
@@ -135,8 +135,22 @@ const ProviderSignupStepper = props => {
           {activeStep === steps.length ? (
             <div>
               <Container maxWidth="md">
-                <ConfirmationMsg classes={classes} />
+                <ConfirmationMsg
+                  classes={classes}
+                  saveResponseError={props.providerState.saveStatusError}
+                />
               </Container>
+              <div>
+                <Link to="/authentication/login">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={(classes.instructions, classes.floatRight)}
+                  >
+                    Login
+                  </Button>
+                </Link>
+              </div>
             </div>
           ) : (
             <div>
