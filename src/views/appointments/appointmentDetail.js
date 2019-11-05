@@ -145,7 +145,7 @@ class AppointmentDet extends React.Component {
       <div>
         <Modal isOpen={this.state.modal} toggle={this.togglereco}>
           <ModalHeader togglereco={this.togglereco}>
-            Call Log Details
+            Prescription Details
           </ModalHeader>
           <ModalBody></ModalBody>
         </Modal>
@@ -172,7 +172,7 @@ class AppointmentDet extends React.Component {
               className="btn float-right"
             >
               <i className="fa fa-folder-open mr-1" />
-              View Recommendation
+              View Prescription
             </Button>
           </CardTitle>
 
@@ -218,6 +218,18 @@ class AppointmentDet extends React.Component {
                   }}
                 >
                   Attachements
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  className={classnames({
+                    active: this.state.activeTab === "3"
+                  })}
+                  onClick={() => {
+                    this.toggle("3");
+                  }}
+                >
+                  Notes
                 </NavLink>
               </NavItem>
             </Nav>
@@ -274,6 +286,33 @@ class AppointmentDet extends React.Component {
                           {
                             Header: "File Size",
                             accessor: "size"
+                          },
+                          {
+                            Header: "Actions",
+                            accessor: "actions",
+                            sortable: false,
+                            filterable: false
+                          }
+                        ]}
+                        defaultPageSize={5}
+                        showPaginationBottom={true}
+                        className="-striped -highlight"
+                        filterable
+                        data={data}
+                      />
+                    </Card>
+                  </Col>
+                </Row>
+              </TabPane>
+              <TabPane tabId="3">
+                <Row>
+                  <Col sm="12">
+                    <Card body>
+                      <ReactTable
+                        columns={[
+                          {
+                            Header: "Note Name",
+                            accessor: "nName"
                           },
                           {
                             Header: "Actions",
