@@ -5,9 +5,11 @@ import Recoverpwd from "../views/authentication/recover-pwd";
 import Maintanance from "../views/authentication/maintanance";
 
 //added new logins
+import Login from "../views/authentication/login/login";
+import ResetPassword from "../views/authentication/login/resetPassword";
+import ChangePassword from "../views/authentication/login/changePassword";
 import Subscription from "../views/authentication/subscription";
 import StripeProvider from "../views/authentication/stripe/stripe";
-import Login from "../views/authentication/login/login";
 import PatientSignup from "../views/authentication/patientSignup/patientSignup";
 import ProviderSignup from "../views/authentication/providerSignup/providerSignup";
 
@@ -60,6 +62,18 @@ var authRoutes = [
     name: "Provider Login",
     icon: "mdi mdi-account-key",
     component: Login
+  },
+  {
+    path: "/authentication/resetPassword",
+    name: "Provider Login",
+    icon: "mdi mdi-account-key",
+    component: ResetPassword
+  },
+  {
+    path: "/api/user/resetForm",
+    name: "Provider Login",
+    icon: "mdi mdi-account-key",
+    component: ChangePassword
   },
   {
     path: "/authentication/patientSignup",

@@ -71,8 +71,7 @@ class videoCall extends React.Component {
     this.currentAppointment = JSON.parse(
       localStorage.getItem("currentAppointment")
     );
-    console.log("this.currentAppointment 01 -- ",this.currentAppointment);
-    
+    console.log("this.currentAppointment 01 -- ", this.currentAppointment);
 
     this.submitRecommendation = this.submitRecommendation.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
@@ -161,7 +160,7 @@ class videoCall extends React.Component {
       this.currentAppointment = JSON.parse(
         localStorage.getItem("currentAppointment")
       );
-      console.log("this.currentAppointment 02 -- ",this.currentAppointment);
+      console.log("this.currentAppointment 02 -- ", this.currentAppointment);
 
       if (this.currentAppointment) {
         this.socket.emit("endCall", {
@@ -177,6 +176,8 @@ class videoCall extends React.Component {
   }
 
   render() {
+    const isProvider =
+      JSON.parse(localStorage.getItem("currentUser")).role.name === "Provider";
     return (
       <Fragment>
         <Row>
@@ -229,18 +230,20 @@ class videoCall extends React.Component {
                     <i className="ti-layers"></i>
                   </NavLink>
                 </NavItem> */}
-                <NavItem>
-                  <NavLink
-                    className={classnames({
-                      active: this.state.activeTab === "3"
-                    })}
-                    onClick={() => {
-                      this.toggle("3");
-                    }}
-                  >
-                    <i className="ti-pencil-alt"></i>
-                  </NavLink>
-                </NavItem>
+                {isProvider && (
+                  <NavItem>
+                    <NavLink
+                      className={classnames({
+                        active: this.state.activeTab === "3"
+                      })}
+                      onClick={() => {
+                        this.toggle("3");
+                      }}
+                    >
+                      <i className="ti-pencil-alt"></i>
+                    </NavLink>
+                  </NavItem>
+                )}
               </Nav>
               <TabContent activeTab={this.state.activeTab}>
                 <TabPane tabId="1">
@@ -306,30 +309,32 @@ class videoCall extends React.Component {
                     </Col>
                   </Row>
                 </TabPane> */}
-                <TabPane tabId="3">
-                  <Row>
-                    <Col sm="12">
-                      <Card>
-                        <CardBody>
-                          <Label>Recommendation</Label>
-                          <Input
-                            type="textarea"
-                            rows="5"
-                            placeholder="Add recommendation here..."
-                            onChange={this.onInputChange}
-                            name="recommendation"
-                          />
-                          <Button
-                            onClick={this.submitRecommendation}
-                            type="submit"
-                          >
-                            Submit
-                          </Button>
-                        </CardBody>
-                      </Card>
-                    </Col>
-                  </Row>
-                </TabPane>
+                {isProvider && (
+                  <TabPane tabId="3">
+                    <Row>
+                      <Col sm="12">
+                        <Card>
+                          <CardBody>
+                            <Label>Recommendation</Label>
+                            <Input
+                              type="textarea"
+                              rows="5"
+                              placeholder="Add recommendation here..."
+                              onChange={this.onInputChange}
+                              name="recommendation"
+                            />
+                            <Button
+                              onClick={this.submitRecommendation}
+                              type="submit"
+                            >
+                              Submit
+                            </Button>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                    </Row>
+                  </TabPane>
+                )}
               </TabContent>
             </Card>
           </Col>

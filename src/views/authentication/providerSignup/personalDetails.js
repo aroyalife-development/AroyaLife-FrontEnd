@@ -9,7 +9,6 @@ import {
 } from "@material-ui/core";
 
 const PersonalDetails = props => {
-  
   return (
     <form className={props.classes.container} noValidate autoComplete="off">
       <Grid container spacing={3}>
@@ -25,7 +24,9 @@ const PersonalDetails = props => {
             variant="outlined"
             fullWidth
           >
-            <MenuItem value="dr">Dr.</MenuItem>
+            <MenuItem value="dr">Mr.</MenuItem>
+            <MenuItem value="miss">Miss.</MenuItem>
+            <MenuItem value="mrs">Mrs.</MenuItem>
           </TextField>
         </Grid>
         <Grid item md={5} xs={6}>
@@ -39,6 +40,7 @@ const PersonalDetails = props => {
             variant="outlined"
             fullWidth
           />
+          <span>{props.providerState.firstName}</span>
         </Grid>
         <Grid item md={5} xs={6}>
           <TextField

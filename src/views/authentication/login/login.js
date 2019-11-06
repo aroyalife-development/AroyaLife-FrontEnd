@@ -233,7 +233,7 @@ class Login extends React.Component {
                     <div className="text-center">
                       Don&apos;t have an account? Sign Up!
                     </div>
-                    <div className="text-center">
+                    <div className="text-center mb-3">
                       <a
                         href="/authentication/patientSignup"
                         className="text-info ml-1"
@@ -246,6 +246,14 @@ class Login extends React.Component {
                         className="text-info ml-1"
                       >
                         <b>Provider</b>
+                      </a>
+                    </div>
+                    <div className="text-center">
+                      <a
+                        href="/authentication/resetPassword"
+                        className="text-info"
+                      >
+                        <b>Forgot Password</b>
                       </a>
                     </div>
                   </Form>

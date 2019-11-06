@@ -1,51 +1,5 @@
-// import React, { Component } from "react";
 import { Elements, StripeProvider } from "react-stripe-elements";
 import CheckoutForm from "./CheckoutForm";
-
-// class Stripe extends React.Component {
-//   constructor() {
-//     super();
-//     this.state = { stripe: null };
-//   }
-
-//   componentDidMount() {
-//     if (window.Stripe) {
-//       this.setState({ stripe: window.Stripe("pk_test_12345") });
-//     } else {
-//       document.querySelector("#stripe-js").addEventListener("load", () => {
-//         // Create Stripe instance once Stripe.js loads
-//         this.setState({ stripe: window.Stripe("pk_test_12345") });
-//       });
-//     }
-//   }
-
-//   render() {
-//     // this.state.stripe will either be null or a Stripe instance
-//     // depending on whether Stripe.js has loaded.
-//     return (
-//       <div
-//         style={{
-//           width: "700px",
-//           margin: "auto",
-//           width: "50%",
-//           border: "3px solid green",
-//           padding: "10px"
-//         }}
-//       >
-// <StripeProvider apiKey="pk_test_TYooMQauvdEDq54NiTphI7jx">
-//   <div className="example">
-//     <h1>React Stripe Elements Example</h1>
-//     <Elements>
-//       <CheckoutForm />
-//     </Elements>
-//   </div>
-// </StripeProvider>
-//       </div>
-//     );
-//   }
-// }
-// export default Stripe;
-
 import React from "react";
 import {
   InputGroup,
@@ -72,6 +26,7 @@ const sidebarBackground = {
 class Stripe extends React.Component {
   constructor(props) {
     super(props);
+    
   }
 
   render() {

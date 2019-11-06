@@ -91,7 +91,7 @@ class Subscription extends React.Component {
                     pathname: path,
                     state: {
                       subscriptionId: "faa6643aca8c5318a9583178795542cf",
-                      amount: 70
+                      amount: 30
                     }
                   }}
                 >
