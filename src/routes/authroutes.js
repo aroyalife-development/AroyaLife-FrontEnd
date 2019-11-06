@@ -6,6 +6,7 @@ import Maintanance from "../views/authentication/maintanance";
 
 //added new logins
 import Subscription from "../views/authentication/subscription";
+import StripeProvider from "../views/authentication/stripe/stripe";
 import Login from "../views/authentication/login/login";
 import PatientSignup from "../views/authentication/patientSignup/patientSignup";
 import ProviderSignup from "../views/authentication/providerSignup/providerSignup";
@@ -47,6 +48,12 @@ var authRoutes = [
     name: "Subscription Plan",
     icon: "mdi mdi-account-plus",
     component: Subscription
+  },
+  {
+    path: "/authentication/stripe",
+    name: "Subscription Plan",
+    icon: "mdi mdi-account-plus",
+    component: StripeProvider
   },
   {
     path: "/authentication/login",

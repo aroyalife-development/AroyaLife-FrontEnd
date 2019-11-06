@@ -109,10 +109,53 @@ import videoCall from "../views/video-call/videoCall";
 /*--------------------------------------------------------------------------------*/
 import appointments from "../views/appointments/userAppointments";
 import appointmentsDet from "../views/appointments/appointmentDetail";
+// import subscription from "../views/subscription/subscription";
+// import stripe from "../views/subscription/stripe/stripe";
 
 var auths = [].concat(AuthRoutes);
 
 var ThemeRoutes = [
+  {
+    path: "/profiles/userProfile",
+    hide: true,
+    name: "Profile",
+    icon: "mdi mdi-account-network",
+    component: userProfile
+  },
+  {
+    path: "/videoCall",
+    hide: true,
+    name: "Video Call",
+    icon: "mdi mdi-phone",
+    component: videoCall
+  },
+  {
+    path: "/appointments",
+    name: "Appointments",
+    icon: "mdi mdi-calendar-clock",
+    component: appointments
+  },
+  {
+    path: "/appointmentDetails",
+    hide: true,
+    name: "Appointments Details",
+    icon: "mdi mdi-calendar-clock",
+    component: appointmentsDet
+  },
+  // {
+  //   path: "/subscription/subscription",
+  //   hide: true,
+  //   name: "Appointments Details",
+  //   icon: "mdi mdi-calendar-clock",
+  //   component: subscription
+  // },
+  // {
+  //   path: "/subscription/stripe",
+  //   hide: true,
+  //   name: "Appointments Details",
+  //   icon: "mdi mdi-calendar-clock",
+  //   component: stripe
+  // }
   // {
   // 	navlabel: true,
   // 	name: 'Personal',
@@ -610,33 +653,6 @@ var ThemeRoutes = [
   //   mini: "B",
   //   icon: "mdi mdi-view-grid",
   //   component: FirstDashboard
-  // },
-  {
-    path: "/profiles/userProfile",
-    hide: true,
-    name: "Profile",
-    icon: "mdi mdi-account-network",
-    component: userProfile
-  },
-  {
-    path: "/videoCall",
-    hide: true,
-    name: "Video Call",
-    icon: "mdi mdi-phone",
-    component: videoCall
-  },
-  {
-    path: "/appointments",
-    name: "Appointments",
-    icon: "mdi mdi-calendar-clock",
-    component: appointments
-  },
-  {
-    path: "/appointmentDetails",
-    hide: true,
-    name: "Appointments Details",
-    icon: "mdi mdi-calendar-clock",
-    component: appointmentsDet
-  }
+  // }
 ];
 export default ThemeRoutes;
