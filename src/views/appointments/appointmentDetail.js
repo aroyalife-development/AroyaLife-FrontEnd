@@ -22,6 +22,8 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import data from "./data.js";
+import axios from "axios";
+import { environment } from "../../environments";
 
 class AppointmentDet extends React.Component {
   constructor(props) {
@@ -31,6 +33,8 @@ class AppointmentDet extends React.Component {
     this.state = {
       activeTab: "1",
       modal: false,
+      appointment: [],
+      appointmentFixed: [],
       jsonData: [
         {
           id: "9d0fe08395fbd9add6cfb1b66505fbf9",
@@ -62,7 +66,7 @@ class AppointmentDet extends React.Component {
       ],
       userType: 1
     };
-    this.appointment = [];
+    //this.appointment = [];
     console.log(this.props.location.state.id);
   }
 
@@ -81,79 +85,105 @@ class AppointmentDet extends React.Component {
   }
 
   componentDidMount() {
-    // axios
-    //   .get(environment.baseUrl + "appointment/" + this.appointmentId)
-    //   .then(response => {
-    //     console.log("------------------- response - ", response);
-    //     this.appointment = response.data.content;
-    //     console.log("------------------- appointment - ", this.appointment);
-    //   })
-    //   .catch(error => {
-    //     console.log("------------------- error - ", error);
-    //   });
+    axios
+      .get(environment.baseUrl + "appointment/" + this.props.location.state.id)
+      .then(response => {
+        console.log("------------------- response - ", response);
+        //this.appointment = response.data.content;
+        this.setState({ appointment: response.data.content });
+        console.log(
+          "------------------- appointment - ",
+          this.state.appointment
+        );
+      })
+      .catch(error => {
+        console.log("------------------- error - ", error);
+      });
+
+    const app = this.state.appointment;
+    const arr = [];
+    for (let key in app) {
+      // arr.push(aa[key] !== undefined && aa[key] !== null && aa[key] !== "");
+      // if (app[key] !== undefined && app[key] !== null && app[key] !== "") {
+      if (
+        app[key] &&
+        app[key].id &&
+        app[key].patient &&
+        app[key].provider &&
+        app[key].sessionId &&
+        app[key].appointDateTime
+      ) {
+        arr.push(app[key]);
+      }
+    }
+    this.setState({ appointmentFixed: arr });
   }
 
   render() {
-    const data = this.state.jsonData.map((prop, key) => {
-      return {
-        id: key,
-        dateTime: prop.appointDateTime,
-        name: prop.patient.user.accName,
-        type: prop.patient.user.type,
-        status: prop.status,
-        callDate: prop.callLog.callDate,
-        callTime: prop.callLog.callTime,
-        duration: prop.callLog.duration,
-        status: prop.callLog.status,
-        actions: (
-          // we've added some custom button actions
-          <div className="text-center">
-            {/* use this button to add a edit kind of action */}
-            {/* <Button
-              onClick={() => {
-                let obj = data.find(o => o.id === key);
-                // this.setState({
-                //   modal: !this.state.modal,
-                //   obj: obj
-                // });
-                let path = `appointmentDetails`;
-                this.props.history.push({
-                  pathname: path,
-                  state: { id: obj.id }
-                });
-              }}
-              color="inverse"
-              size="sm"
-              round="true"
-              icon="true"
-            >
-              <i className="fa fa-edit" />
-            </Button> */}
-            {/* use this button to remove the data row */}
-            {/* <Button
-              onClick={() => {
-                let newdata = data2;
-                newdata.find((o, i) => {
-                  if (o.id === key) {
-                    newdata.splice(i, 1);
-                    console.log(newdata);
-                    return true;
-                  }
-                  return false;
-                });
-                this.setState({ jsonData: newdata });
-              }}
-              className="ml-1"
-              color="danger"
-              size="sm"
-              round="true"
-              icon="true"
-            >
-              <i className="fa fa-times" />
-            </Button> */}
-          </div>
-        )
-      };
+    console.log(this.state.appointmentFixed);
+
+    const data = this.state.appointmentFixed.map((prop, key) => {
+      console.log("props", prop);
+
+      // return {
+      //   id: key,
+      //   dateTime: prop.appointDateTime,
+      //   name: prop.patient.user.accName,
+      //   type: prop.patient.user.type,
+      //   status: prop.status,
+      //   callDate: prop.callLog.callDate,
+      //   callTime: prop.callLog.callTime,
+      //   duration: prop.callLog.duration,
+      //   status: prop.callLog.status,
+      //   actions: (
+      //     // we've added some custom button actions
+      //     <div className="text-center">
+      //       {/* use this button to add a edit kind of action */}
+      //       {/* <Button
+      //         onClick={() => {
+      //           let obj = data.find(o => o.id === key);
+      //           // this.setState({
+      //           //   modal: !this.state.modal,
+      //           //   obj: obj
+      //           // });
+      //           let path = `appointmentDetails`;
+      //           this.props.history.push({
+      //             pathname: path,
+      //             state: { id: obj.id }
+      //           });
+      //         }}
+      //         color="inverse"
+      //         size="sm"
+      //         round="true"
+      //         icon="true"
+      //       >
+      //         <i className="fa fa-edit" />
+      //       </Button> */}
+      //       {/* use this button to remove the data row */}
+      //       {/* <Button
+      //         onClick={() => {
+      //           let newdata = data2;
+      //           newdata.find((o, i) => {
+      //             if (o.id === key) {
+      //               newdata.splice(i, 1);
+      //               console.log(newdata);
+      //               return true;
+      //             }
+      //             return false;
+      //           });
+      //           this.setState({ jsonData: newdata });
+      //         }}
+      //         className="ml-1"
+      //         color="danger"
+      //         size="sm"
+      //         round="true"
+      //         icon="true"
+      //       >
+      //         <i className="fa fa-times" />
+      //       </Button> */}
+      //     </div>
+      //   )
+      // };
     });
 
     return (
@@ -313,7 +343,7 @@ class AppointmentDet extends React.Component {
                         showPaginationBottom={true}
                         className="-striped -highlight"
                         filterable
-                        data={data}
+                        //data={data}
                       />
                     </Card>
                   </Col>

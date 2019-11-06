@@ -34,6 +34,7 @@ class UserAppointments extends React.Component {
       search: false,
       obj: {},
       appointments: [],
+      appointmentsFixed: [],
       jsonData: [
         {
           id: "9d0fe08395fbd9add6cfb1b66505fbf9",
@@ -138,23 +139,48 @@ class UserAppointments extends React.Component {
       .catch(error => {
         console.log("------------------- error - ", error);
       });
+
+    const app = this.state.appointments;
+    const arr = [];
+    for (let key in app) {
+      // arr.push(aa[key] !== undefined && aa[key] !== null && aa[key] !== "");
+      // if (app[key] !== undefined && app[key] !== null && app[key] !== "") {
+      if (
+        app[key] &&
+        app[key].id &&
+        app[key].appointDateTime &&
+        app[key].patient &&
+        app[key].provider
+      ) {
+        arr.push(app[key]);
+      }
+    }
+    this.setState({ appointmentsFixed: arr });
   }
 
   render() {
-    const data = this.state.appointments.map((prop, key) => {
+    // const aa = [{id: "001"}, {id: "002"}]
+    //const aa = this.state.appointments;
+    // aa.forEach(prop => {
+    //   // console.log("jjj", prop);
+    //   if (prop.value !== null) {
+    //     appointmentsFixed.push(prop.value);
+    //   }
+    // });
+
+    const data = this.state.appointmentsFixed.map(prop => {
       return {
-        id: key,
+        id: prop.id,
         dateTime: prop.appointDateTime,
-        name: prop.patient.user.accName,
-        type: prop.patient.user.type,
-        status: prop.status,
+        patient: prop.patient.user.accName,
+        provider: prop.provider.user.accName,
         actions: (
           // we've added some custom button actions
           <div className="text-center">
             {/* use this button to add a edit kind of action */}
             <Button
               onClick={() => {
-                let obj = data.find(o => o.id === key);
+                let obj = data.find(o => o.id === prop.id);
                 // this.setState({
                 //   modal: !this.state.modal,
                 //   obj: obj
@@ -222,16 +248,12 @@ class UserAppointments extends React.Component {
                 accessor: "dateTime"
               },
               {
-                Header: "Name",
-                accessor: "name"
+                Header: "Provider Name",
+                accessor: "provider"
               },
               {
-                Header: "Type",
-                accessor: "type"
-              },
-              {
-                Header: "Status",
-                accessor: "status"
+                Header: "Patient Name",
+                accessor: "patient"
               },
               {
                 Header: "Actions",
